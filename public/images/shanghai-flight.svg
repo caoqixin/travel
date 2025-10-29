@@ -1,0 +1,51 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sunsetGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#sunsetGradient)"/>
+  
+  <!-- 太阳 -->
+  <circle cx="320" cy="80" r="30" fill="#fef3c7" opacity="0.8"/>
+  
+  <!-- 云朵 -->
+  <ellipse cx="100" cy="70" rx="20" ry="12" fill="white" opacity="0.6"/>
+  <ellipse cx="115" cy="65" rx="25" ry="15" fill="white" opacity="0.6"/>
+  
+  <!-- 飞机 -->
+  <g transform="translate(180,120) rotate(-10)">
+    <ellipse cx="0" cy="0" rx="45" ry="10" fill="#dc2626"/>
+    <ellipse cx="18" cy="-3" rx="18" ry="4" fill="#b91c1c"/>
+    <ellipse cx="-12" cy="0" rx="10" ry="15" fill="#991b1b"/>
+    <ellipse cx="-28" cy="0" rx="8" ry="10" fill="#991b1b"/>
+  </g>
+  
+  <!-- 上海天际线 -->
+  <rect x="0" y="200" width="400" height="100" fill="#1f2937"/>
+  
+  <!-- 东方明珠塔 -->
+  <rect x="180" y="120" width="8" height="180" fill="#6b7280"/>
+  <circle cx="184" cy="140" r="12" fill="#ef4444"/>
+  <circle cx="184" cy="170" r="8" fill="#ef4444"/>
+  <circle cx="184" cy="190" r="6" fill="#ef4444"/>
+  
+  <!-- 其他建筑 -->
+  <rect x="60" y="160" width="25" height="140" fill="#374151"/>
+  <rect x="100" y="170" width="20" height="130" fill="#4b5563"/>
+  <rect x="140" y="150" width="30" height="150" fill="#374151"/>
+  <rect x="220" y="165" width="22" height="135" fill="#4b5563"/>
+  <rect x="260" y="155" width="28" height="145" fill="#374151"/>
+  <rect x="310" y="175" width="24" height="125" fill="#4b5563"/>
+  <rect x="350" y="180" width="20" height="120" fill="#374151"/>
+  
+  <!-- 建筑灯光 -->
+  <rect x="65" y="170" width="3" height="3" fill="#fbbf24"/>
+  <rect x="75" y="170" width="3" height="3" fill="#fbbf24"/>
+  <rect x="65" y="185" width="3" height="3" fill="#fbbf24"/>
+  <rect x="75" y="185" width="3" height="3" fill="#fbbf24"/>
+  
+  <text x="200" y="280" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">上海航班</text>
+</svg>

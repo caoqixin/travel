@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# test reports
+*test-report.json
+*test-report.html
+comprehensive-test-report.*
+performance-test-report.*
+stress-test-report.*
+daily-usage-report.*
+concurrency-test-report.*
+
+.open-next/
