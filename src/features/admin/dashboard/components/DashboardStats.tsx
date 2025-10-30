@@ -1,15 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Plane,
-  TrendingUp,
-  Users,
-  DollarSign,
-  ArrowUpRight,
-  ArrowDownRight,
-} from "lucide-react";
+import { Plane, TrendingUp } from "lucide-react";
 
 interface DashboardStatsProps {
   stats: {

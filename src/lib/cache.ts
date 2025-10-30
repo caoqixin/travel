@@ -64,19 +64,19 @@ export const cache = new MemoryCache();
 export function withCache<T extends (...args: any[]) => Promise<any>>(
   fn: T,
   keyGenerator: (...args: Parameters<T>) => string,
-  ttl: number = 5 * 60 * 1000
+  ttl: number = 5 * 60 * 1000 // 默认5分钟
 ): T {
   return (async (...args: Parameters<T>) => {
     const key = keyGenerator(...args);
-
+    
     // 尝试从缓存获取
     const cached = cache.get(key);
     if (cached !== null) {
       return cached;
     }
 
-    // 执行原函数
     try {
+      // 执行原函数
       const result = await fn(...args);
       // 缓存结果
       cache.set(key, result, ttl);
@@ -111,9 +111,9 @@ export const cacheKeys = {
 
 // 缓存配置
 export const cacheTTL = {
-  flights: 15 * 60 * 1000, // 15分钟 (增加缓存时间)
-  flightDetail: 30 * 60 * 1000, // 30分钟 (航班详情变化较少)
-  searchResults: 10 * 60 * 1000, // 10分钟 (搜索结果缓存更久)
-  adminFlights: 5 * 60 * 1000, // 5分钟 (管理员数据需要更新)
-  flightCount: 60 * 60 * 1000, // 1小时 (总数统计缓存)
+  flights: 2 * 60 * 1000, // 2分钟 (减少缓存时间，确保数据及时更新)
+  flightDetail: 5 * 60 * 1000, // 5分钟 (航班详情也需要及时更新)
+  searchResults: 3 * 60 * 1000, // 3分钟 (搜索结果缓存时间减少)
+  adminFlights: 1 * 60 * 1000, // 1分钟 (管理员数据需要快速更新)
+  flightCount: 10 * 60 * 1000, // 10分钟 (总数统计缓存时间减少)
 } as const;

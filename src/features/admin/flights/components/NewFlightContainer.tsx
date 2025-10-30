@@ -14,85 +14,141 @@ export function NewFlightContainer() {
   const handleSubmit = async (data: any) => {
     setIsLoading(true);
     try {
-      // 转换数据格式以匹配 IFlight 接口
+      // 数据验证和清理
+      const validateAndClean = (value: any, defaultValue: any = "") => {
+        return value && value.toString().trim() !== "" ? value.toString().trim() : defaultValue;
+      };
+
+      // 验证必填字段
+      const requiredFields = [
+        { field: data.title, name: "标题" },
+        { field: data.flightNumber, name: "航班号" },
+        { field: data.flightDuration, name: "飞行时长" },
+        { field: data.departure?.city, name: "出发城市" },
+        { field: data.departure?.airport, name: "出发机场" },
+        { field: data.departure?.code, name: "出发机场代码" },
+        { field: data.departure?.time, name: "出发时间" },
+        { field: data.arrival?.city, name: "到达城市" },
+        { field: data.arrival?.airport, name: "到达机场" },
+        { field: data.arrival?.code, name: "到达机场代码" },
+        { field: data.arrival?.time, name: "到达时间" },
+        { field: data.airline?.name, name: "航空公司名称" },
+        { field: data.airline?.code, name: "航空公司代码" },
+      ];
+
+      // 检查必填字段
+      for (const { field, name } of requiredFields) {
+        if (!field || field.toString().trim() === "") {
+          throw new Error(`${name}不能为空`);
+        }
+      }
+
+      // 验证价格
+      if (!data.price || isNaN(Number(data.price)) || Number(data.price) <= 0) {
+        throw new Error("价格必须大于0");
+      }
+
+      // 如果是往返航班，验证返程航班信息
+      if (data.type === "round-trip") {
+        const returnRequiredFields = [
+          { field: data.returnFlight?.flightNumber, name: "返程航班号" },
+          { field: data.returnFlight?.flightDuration, name: "返程飞行时长" },
+          { field: data.returnFlight?.departure?.city, name: "返程出发城市" },
+          { field: data.returnFlight?.departure?.airport, name: "返程出发机场" },
+          { field: data.returnFlight?.departure?.code, name: "返程出发机场代码" },
+          { field: data.returnFlight?.departure?.time, name: "返程出发时间" },
+          { field: data.returnFlight?.arrival?.city, name: "返程到达城市" },
+          { field: data.returnFlight?.arrival?.airport, name: "返程到达机场" },
+          { field: data.returnFlight?.arrival?.code, name: "返程到达机场代码" },
+          { field: data.returnFlight?.arrival?.time, name: "返程到达时间" },
+        ];
+
+        for (const { field, name } of returnRequiredFields) {
+          if (!field || field.toString().trim() === "") {
+            throw new Error(`${name}不能为空`);
+          }
+        }
+      }
+
+      // 准备航班数据
       const flightData = {
-        title: data.title,
-        description: data.description,
-        image: data.image,
-        price: data.price,
-        discountPrice: data.discountPrice,
+        title: validateAndClean(data.title),
+        description: validateAndClean(data.description),
+        image: validateAndClean(data.image, "/placeholder-flight.jpg"), // 提供默认图片
+        price: Number(data.price),
+        discountPrice: data.discountPrice ? Number(data.discountPrice) : undefined,
         departure: {
-          city: data.departure.city,
-          airport: data.departure.airport,
-          code: data.departure.code,
-          terminal: data.departure.terminal || "",
+          city: validateAndClean(data.departure.city),
+          airport: validateAndClean(data.departure.airport),
+          code: validateAndClean(data.departure.code),
+          terminal: validateAndClean(data.departure.terminal),
           time: new Date(data.departure.time),
         },
         arrival: {
-          city: data.arrival.city,
-          airport: data.arrival.airport,
-          code: data.arrival.code,
-          terminal: data.arrival.terminal || "",
+          city: validateAndClean(data.arrival.city),
+          airport: validateAndClean(data.arrival.airport),
+          code: validateAndClean(data.arrival.code),
+          terminal: validateAndClean(data.arrival.terminal),
           time: new Date(data.arrival.time),
         },
-        flightNumber: data.flightNumber,
-        flightDuration: data.flightDuration,
+        flightNumber: validateAndClean(data.flightNumber),
+        flightDuration: validateAndClean(data.flightDuration),
         layovers: data.layovers?.map((layover: any) => ({
-          city: layover.city,
-          airport: layover.airport,
-          code: layover.code,
-          terminal: layover.terminal || "",
-          flightNumber: layover.flightNumber || "",
+          city: validateAndClean(layover.city),
+          airport: validateAndClean(layover.airport),
+          code: validateAndClean(layover.code),
+          terminal: validateAndClean(layover.terminal),
+          flightNumber: validateAndClean(layover.flightNumber),
           arrivalTime: new Date(layover.arrivalTime || new Date()),
           departureTime: new Date(layover.departureTime || new Date()),
-          duration: layover.duration,
-        })),
-        returnFlight: data.returnFlight ? {
+          duration: validateAndClean(layover.duration),
+        })) || [],
+        returnFlight: data.type === "round-trip" && data.returnFlight ? {
           departure: {
-            city: data.returnFlight.departure.city,
-            airport: data.returnFlight.departure.airport,
-            code: data.returnFlight.departure.code,
-            terminal: data.returnFlight.departure.terminal || "",
+            city: validateAndClean(data.returnFlight.departure.city),
+            airport: validateAndClean(data.returnFlight.departure.airport),
+            code: validateAndClean(data.returnFlight.departure.code),
+            terminal: validateAndClean(data.returnFlight.departure.terminal),
             time: new Date(data.returnFlight.departure.time),
           },
           arrival: {
-            city: data.returnFlight.arrival.city,
-            airport: data.returnFlight.arrival.airport,
-            code: data.returnFlight.arrival.code,
-            terminal: data.returnFlight.arrival.terminal || "",
+            city: validateAndClean(data.returnFlight.arrival.city),
+            airport: validateAndClean(data.returnFlight.arrival.airport),
+            code: validateAndClean(data.returnFlight.arrival.code),
+            terminal: validateAndClean(data.returnFlight.arrival.terminal),
             time: new Date(data.returnFlight.arrival.time),
           },
-          flightNumber: data.returnFlight.flightNumber,
-          flightDuration: data.returnFlight.flightDuration,
+          flightNumber: validateAndClean(data.returnFlight.flightNumber),
+          flightDuration: validateAndClean(data.returnFlight.flightDuration),
           layovers: data.returnFlight.layovers?.map((layover: any) => ({
-            city: layover.city,
-            airport: layover.airport,
-            code: layover.code,
-            terminal: layover.terminal || "",
-            flightNumber: layover.flightNumber || "",
+            city: validateAndClean(layover.city),
+            airport: validateAndClean(layover.airport),
+            code: validateAndClean(layover.code),
+            terminal: validateAndClean(layover.terminal),
+            flightNumber: validateAndClean(layover.flightNumber),
             arrivalTime: new Date(layover.arrivalTime || new Date()),
             departureTime: new Date(layover.departureTime || new Date()),
-            duration: layover.duration,
-          })),
+            duration: validateAndClean(layover.duration),
+          })) || [],
         } : undefined,
         type: data.type,
         airline: {
-          name: data.airline.name,
-          code: data.airline.code,
+          name: validateAndClean(data.airline.name),
+          code: validateAndClean(data.airline.code),
         },
         stops: data.layovers?.length || 0,
         baggage: {
           cabin: {
-            weight: data.baggage.cabin.weight,
-            quantity: data.baggage.cabin.quantity,
+            weight: validateAndClean(data.baggage?.cabin?.weight, "7kg"),
+            quantity: Number(data.baggage?.cabin?.quantity) || 1,
           },
           checked: {
-            weight: data.baggage.checked.weight,
-            quantity: data.baggage.checked.quantity,
+            weight: validateAndClean(data.baggage?.checked?.weight, "23kg"),
+            quantity: Number(data.baggage?.checked?.quantity) || 1,
           },
         },
         amenities: data.amenities || [],
-        status: data.status,
+        status: data.status || "active",
         tags: data.tags || [],
       };
 

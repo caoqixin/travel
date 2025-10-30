@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { IFlight } from "@/lib/models/Flight";
-import FlightCard from "./FlightCard";
 import FlightCardSkeleton from "./FlightCardSkeleton";
 import FlightSearchDynamic from "./FlightSearchDynamic";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,6 @@ import { NetworkError, DataLoadError } from "@/components/ui/error-boundary";
 import { withCache, cacheKeys, cacheTTL } from "@/lib/cache";
 import OptimizedFlightList from "@/components/ui/optimized-flight-list";
 import OptimizedFlightCard from "@/components/ui/optimized-flight-card";
-
 
 interface FlightListProps {
   initialFlights?: IFlight[];
@@ -30,8 +28,6 @@ function FlightList({
   const [sortBy, setSortBy] = useState("price");
   const [error, setError] = useState<string | null>(null);
   const [useOptimizedView, setUseOptimizedView] = useState(true);
-
-
 
   // 创建带缓存的API调用函数
   const fetchFlightsAPI = withCache(
@@ -68,12 +64,28 @@ function FlightList({
 
     try {
       const data = await fetchFlightsAPI(page, destination, sort);
-      setFlights(data.flights);
-      setTotalPages(data.totalPages);
-      setCurrentPage(page);
+
+      // 处理新的 API 响应格式
+      if (data.success && data.data !== undefined) {
+        setFlights(data.data);
+        // 如果没有数据，totalPages 应该是 0 或者至少是 1（但要确保正确显示无数据状态）
+        const totalPages =
+          data.pagination?.totalPages || (data.data.length > 0 ? 1 : 0);
+        setTotalPages(Math.max(totalPages, data.data.length > 0 ? 1 : 0));
+        setCurrentPage(page);
+      } else {
+        // 处理旧的 API 响应格式（向后兼容）
+        const flights = data.flights || [];
+        setFlights(flights);
+        setTotalPages(data.totalPages || (flights.length > 0 ? 1 : 0));
+        setCurrentPage(page);
+      }
     } catch (error) {
       console.error("Error fetching flights:", error);
       setError(error instanceof Error ? error.message : "获取航班数据失败");
+      // 确保在错误情况下也清空航班列表
+      setFlights([]);
+      setTotalPages(0);
     } finally {
       setLoading(false);
     }
@@ -222,7 +234,7 @@ function FlightList({
                         size="sm"
                         onClick={() => handlePageChange(pageNum)}
                         disabled={loading}
-                        className="text-xs sm:text-sm min-w-[32px] sm:min-w-[40px] px-2 sm:px-3"
+                        className="text-xs sm:text-sm min-w-8 sm:min-w-10 px-2 sm:px-3"
                       >
                         {pageNum}
                       </Button>
@@ -261,8 +273,6 @@ function FlightList({
             </p>
           </div>
         )}
-
-
       </div>
     </div>
   );

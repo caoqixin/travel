@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ObjectId } from "mongodb";
+import { revalidatePath } from "next/cache";
+
 import { IFlight, FLIGHT_COLLECTION, validateFlight, createFlightDefaults } from "@/lib/models/Flight";
 import { auth } from "@/lib/auth";
 import { getDatabase } from "@/lib/mongodb";
@@ -7,7 +8,6 @@ import { cache, cacheKeys, cacheTTL, withCache } from "@/lib/cache";
 import { optimizedFlightQuery } from "@/lib/db-optimization";
 import { 
   createOptimizedResponse,
-  DataCompressor, 
   PaginationOptimizer
 } from "@/lib/response-optimization";
 
@@ -142,7 +142,7 @@ export async function GET(request: NextRequest) {
     // 创建优化响应
     const response = createOptimizedResponse(result, {
       enableCaching: true,
-      cacheMaxAge: 300, // 5分钟缓存
+      cacheMaxAge: 60, // 1分钟缓存，确保数据及时更新
       enableETag: true
     });
 
@@ -202,6 +202,10 @@ export async function POST(request: NextRequest) {
     
     const result = await collection.insertOne(flightData);
     const flight = await collection.findOne({ _id: result.insertedId });
+
+    // 更新页面缓存
+    revalidatePath('/');
+    revalidatePath('/admin/flights');
 
     return NextResponse.json(flight, { status: 201 });
   } catch (error) {

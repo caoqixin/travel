@@ -22,10 +22,75 @@ export function EditFlightContainer({
   const handleSubmit = async (formData: FlightFormData) => {
     setIsLoading(true);
     try {
+      // 客户端验证和数据清理
+      const validateAndClean = (value: any) => {
+        if (typeof value === 'string') {
+          return value.trim() || undefined;
+        }
+        return value;
+      };
+
+      // 验证必填字段
+      const errors: string[] = [];
+      
+      if (!validateAndClean(formData.title)) {
+        errors.push("航班标题不能为空");
+      }
+      if (!validateAndClean(formData.flightNumber)) {
+        errors.push("航班号不能为空");
+      }
+      if (!validateAndClean(formData.flightDuration)) {
+        errors.push("飞行时长不能为空");
+      }
+      if (!formData.departure?.city || !formData.departure?.airport || !formData.departure?.code || !formData.departure?.time) {
+        errors.push("出发信息不完整");
+      }
+      if (!formData.arrival?.city || !formData.arrival?.airport || !formData.arrival?.code || !formData.arrival?.time) {
+        errors.push("到达信息不完整");
+      }
+      if (!formData.airline?.name || !formData.airline?.code) {
+        errors.push("航空公司信息不完整");
+      }
+      if (formData.price !== undefined && formData.price <= 0) {
+        errors.push("价格必须大于0");
+      }
+
+      // 验证往返航班
+      if (formData.type === "round-trip" && formData.returnFlight) {
+        if (!formData.returnFlight.departure?.city || !formData.returnFlight.departure?.airport || 
+            !formData.returnFlight.departure?.code || !formData.returnFlight.departure?.time) {
+          errors.push("返程出发信息不完整");
+        }
+        if (!formData.returnFlight.arrival?.city || !formData.returnFlight.arrival?.airport || 
+            !formData.returnFlight.arrival?.code || !formData.returnFlight.arrival?.time) {
+          errors.push("返程到达信息不完整");
+        }
+      }
+
+      if (errors.length > 0) {
+        toast.error(errors[0]);
+        return;
+      }
+
       // 转换表单数据为 IFlight 格式
-      const { returnFlight, ...baseFormData } = formData;
+      const { returnFlight, price, discountPrice, ...baseFormData } = formData;
+      
+      // 处理价格字段 - 如果折扣价格为0或undefined，则不包含
+      const priceData: any = {
+        price: price,
+      };
+      if (discountPrice && discountPrice > 0) {
+        priceData.discountPrice = discountPrice;
+      }
+      
       const flightData: Partial<IFlight> = {
         ...baseFormData,
+        ...priceData,
+        title: validateAndClean(formData.title),
+        description: validateAndClean(formData.description),
+        image: formData.image || "/images/placeholder.svg", // 提供默认图片
+        flightNumber: validateAndClean(formData.flightNumber),
+        flightDuration: validateAndClean(formData.flightDuration),
         // 确保时间字段是 Date 对象
         departure: {
           ...formData.departure,
@@ -41,9 +106,17 @@ export function EditFlightContainer({
         layovers: formData.layovers?.map(layover => ({
           ...layover,
           terminal: layover.terminal || "",
-          arrivalTime: new Date(), // 默认时间，实际应该从表单获取
-          departureTime: new Date(), // 默认时间，实际应该从表单获取
+          arrivalTime: layover.arrivalTime ? new Date(layover.arrivalTime) : new Date(),
+          departureTime: layover.departureTime ? new Date(layover.departureTime) : new Date(),
         })),
+        // 提供默认值
+        baggage: formData.baggage || {
+          cabin: { weight: "7kg", quantity: 1 },
+          checked: { weight: "23kg", quantity: 1 }
+        },
+        amenities: formData.amenities || [],
+        status: formData.status || "active",
+        stops: formData.layovers ? formData.layovers.length : 0,
       };
 
       // 处理返程信息

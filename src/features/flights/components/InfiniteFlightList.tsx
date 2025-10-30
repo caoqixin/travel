@@ -102,11 +102,11 @@ export default function InfiniteFlightList({
     }
   };
 
-  const loadMore = useCallback(() => {
-    if (!loadingMore && hasMore) {
-      fetchFlights(currentPage + 1, searchDestination, sortBy, true);
-    }
-  }, [currentPage, searchDestination, sortBy, loadingMore, hasMore]);
+  // const loadMore = useCallback(() => {
+  //   if (!loadingMore && hasMore) {
+  //     fetchFlights(currentPage + 1, searchDestination, sortBy, true);
+  //   }
+  // }, [currentPage, searchDestination, sortBy, loadingMore, hasMore]);
 
   // 初始化数据获取 - 只在组件挂载时执行一次
   useEffect(() => {

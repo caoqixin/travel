@@ -767,7 +767,7 @@ export function CreateFlightForm({
                     <FormItem>
                       <FormLabel>返程航班号</FormLabel>
                       <FormControl>
-                        <Input placeholder="CA4321" {...field} />
+                        <Input placeholder="CA4321" {...field} value={field.value || ""} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -781,7 +781,7 @@ export function CreateFlightForm({
                     <FormItem>
                       <FormLabel>返程飞行时间</FormLabel>
                       <FormControl>
-                        <Input placeholder="2小时30分钟" {...field} />
+                        <Input placeholder="2小时30分钟" {...field} value={field.value || ""} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -800,7 +800,7 @@ export function CreateFlightForm({
                       <FormItem>
                         <FormLabel>出发城市</FormLabel>
                         <FormControl>
-                          <Input placeholder="上海" {...field} />
+                          <Input placeholder="上海" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -814,7 +814,7 @@ export function CreateFlightForm({
                       <FormItem>
                         <FormLabel>出发机场</FormLabel>
                         <FormControl>
-                          <Input placeholder="浦东国际机场" {...field} />
+                          <Input placeholder="浦东国际机场" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -828,7 +828,7 @@ export function CreateFlightForm({
                       <FormItem>
                         <FormLabel>机场代码</FormLabel>
                         <FormControl>
-                          <Input placeholder="PVG" {...field} />
+                          <Input placeholder="PVG" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -842,7 +842,7 @@ export function CreateFlightForm({
                       <FormItem>
                         <FormLabel>候机楼</FormLabel>
                         <FormControl>
-                          <Input placeholder="T2" {...field} />
+                          <Input placeholder="T2" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -856,7 +856,7 @@ export function CreateFlightForm({
                       <FormItem className="col-span-2">
                         <FormLabel>出发时间</FormLabel>
                         <FormControl>
-                          <Input type="datetime-local" {...field} />
+                          <Input type="datetime-local" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -878,7 +878,7 @@ export function CreateFlightForm({
                       <FormItem>
                         <FormLabel>到达城市</FormLabel>
                         <FormControl>
-                          <Input placeholder="北京" {...field} />
+                          <Input placeholder="北京" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -892,7 +892,7 @@ export function CreateFlightForm({
                       <FormItem>
                         <FormLabel>到达机场</FormLabel>
                         <FormControl>
-                          <Input placeholder="首都国际机场" {...field} />
+                          <Input placeholder="首都国际机场" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -906,7 +906,7 @@ export function CreateFlightForm({
                       <FormItem>
                         <FormLabel>机场代码</FormLabel>
                         <FormControl>
-                          <Input placeholder="PEK" {...field} />
+                          <Input placeholder="PEK" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -920,7 +920,7 @@ export function CreateFlightForm({
                       <FormItem>
                         <FormLabel>候机楼</FormLabel>
                         <FormControl>
-                          <Input placeholder="T3" {...field} />
+                          <Input placeholder="T3" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -934,7 +934,7 @@ export function CreateFlightForm({
                       <FormItem className="col-span-2">
                         <FormLabel>到达时间</FormLabel>
                         <FormControl>
-                          <Input type="datetime-local" {...field} />
+                          <Input type="datetime-local" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -997,7 +997,7 @@ export function CreateFlightForm({
                               <FormItem>
                                 <FormLabel>中转城市</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="广州" {...field} />
+                                  <Input placeholder="广州" {...field} value={field.value || ""} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -1014,6 +1014,7 @@ export function CreateFlightForm({
                                   <Input
                                     placeholder="白云国际机场"
                                     {...field}
+                                    value={field.value || ""}
                                   />
                                 </FormControl>
                                 <FormMessage />
@@ -1028,7 +1029,7 @@ export function CreateFlightForm({
                               <FormItem>
                                 <FormLabel>机场代码</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="CAN" {...field} />
+                                  <Input placeholder="CAN" {...field} value={field.value || ""} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -1042,7 +1043,7 @@ export function CreateFlightForm({
                               <FormItem>
                                 <FormLabel>候机楼</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="T1" {...field} />
+                                  <Input placeholder="T1" {...field} value={field.value || ""} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -1056,7 +1057,7 @@ export function CreateFlightForm({
                               <FormItem>
                                 <FormLabel>航班号</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="CA8765" {...field} />
+                                  <Input placeholder="CA8765" {...field} value={field.value || ""} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -1070,7 +1071,7 @@ export function CreateFlightForm({
                               <FormItem>
                                 <FormLabel>中转时长</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="2小时30分钟" {...field} />
+                                  <Input placeholder="2小时30分钟" {...field} value={field.value || ""} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>

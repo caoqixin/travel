@@ -3,13 +3,13 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { MongoClient } from "mongodb";
 import bcrypt from "bcryptjs";
 
-if (!process.env.MONGODB_URI) {
+if (process.env.NODE_ENV === "development" && !process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
 }
 
 // 创建 MongoDB 客户端和数据库实例
-const client = new MongoClient(process.env.MONGODB_URI);
-const db = client.db(process.env.MONGODB_DB);
+const client = new MongoClient(process.env.MONGODB_URI!);
+const db = client.db(process.env.MONGODB_DB!);
 
 export const auth = betterAuth({
   database: mongodbAdapter(db, { client }),

@@ -37,6 +37,9 @@ export async function POST(request: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
+    // 对原始文件名进行编码以避免特殊字符问题
+    const encodedOriginalName = encodeURIComponent(file.name);
+    
     // 上传到 R2
     const uploadCommand = new PutObjectCommand({
       Bucket: R2_BUCKET_NAME,
@@ -46,10 +49,10 @@ export async function POST(request: NextRequest) {
       ContentLength: buffer.length,
       // 设置缓存控制
       CacheControl: 'public, max-age=31536000', // 1年缓存
-      // 设置元数据
+      // 设置元数据 - 使用编码后的文件名避免特殊字符问题
       Metadata: {
-        originalName: file.name,
-        uploadedAt: new Date().toISOString(),
+        originalname: encodedOriginalName, // 使用小写且编码后的名称
+        uploadedat: new Date().toISOString().replace(/[^a-zA-Z0-9]/g, ''), // 移除特殊字符
       },
     });
 

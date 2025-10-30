@@ -8,12 +8,12 @@ async function getInitialFlights() {
     // 在构建时跳过数据获取
     if (
       process.env.NODE_ENV === "production" &&
-      !process.env.NEXT_PUBLIC_BASE_URL
+      !process.env.NEXT_PUBLIC_APP_URL
     ) {
       return { flights: [], totalPages: 1 };
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const response = await fetch(
       `${baseUrl}/api/flights?page=1&limit=12&sortBy=price`,
       {

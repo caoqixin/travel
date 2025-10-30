@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { ObjectId } from "mongodb";
 import {
   IFlight,
   FLIGHT_COLLECTION,
-  validateFlight,
-  createFlightDefaults,
 } from "@/lib/models/Flight";
 import { getServerSession } from "@/lib/auth";
 import { getDatabase } from "@/lib/mongodb";
 import { cache, cacheKeys, cacheTTL, withCache } from "@/lib/cache";
-import { optimizedFlightQuery, bulkUpdateFlights } from "@/lib/db-optimization";
+import { optimizedFlightQuery } from "@/lib/db-optimization";
 
 // 创建带缓存的管理员航班查询函数
 const getCachedAdminFlights = withCache(
@@ -162,6 +161,11 @@ export async function PUT(request: NextRequest) {
       _id: new ObjectId(flightId),
     });
 
+    // 更新页面缓存
+    revalidatePath('/');
+    revalidatePath('/admin/flights');
+    revalidatePath(`/flights/${flightId}`);
+
     return NextResponse.json({
       success: true,
       flight: updatedFlight,
@@ -205,6 +209,10 @@ export async function DELETE(request: NextRequest) {
     if (result.deletedCount === 0) {
       return NextResponse.json({ error: "Flight not found" }, { status: 404 });
     }
+
+    // 更新页面缓存
+    revalidatePath('/');
+    revalidatePath('/admin/flights');
 
     return NextResponse.json({
       success: true,

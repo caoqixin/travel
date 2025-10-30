@@ -6,7 +6,7 @@ import Link from "next/link";
 
 async function getFlight(id: string): Promise<IFlight | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const response = await fetch(`${baseUrl}/api/flights/${id}`, {
       cache: "no-store", // 确保获取最新数据
     });
