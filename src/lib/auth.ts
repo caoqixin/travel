@@ -28,9 +28,6 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7, // 7 days
     updateAge: 60 * 60 * 24, // 24 hours
   },
-
-  trustedOrigins: [process.env.BETTER_AUTH_URL || "http://localhost:3000"],
-  secret: process.env.BETTER_AUTH_SECRET || "your-secret-key-here",
 });
 
 export async function getServerSession() {
