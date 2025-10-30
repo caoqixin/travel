@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { ObjectId } from "mongodb";
 import { IFlight, FLIGHT_COLLECTION } from "@/lib/models/Flight";
-import { getServerSession } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { getDatabase } from "@/lib/mongodb";
 import { cache, cacheKeys, cacheTTL, withCache } from "@/lib/cache";
 import { optimizedFlightQuery } from "@/lib/db-optimization";
+import { headers } from "next/headers";
 
 // 创建带缓存的管理员航班查询函数
 const getCachedAdminFlights = withCache(
@@ -55,7 +56,9 @@ const getCachedAdminFlights = withCache(
 // GET - 获取所有航班列表 (管理员专用)
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession();
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -102,7 +105,9 @@ export async function GET(request: NextRequest) {
 // PUT - 更新航班状态 (管理员专用)
 export async function PUT(request: NextRequest) {
   try {
-    const session = await getServerSession();
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -172,7 +177,9 @@ export async function PUT(request: NextRequest) {
 // DELETE - 删除航班 (管理员专用)
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await getServerSession();
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
