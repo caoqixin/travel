@@ -56,10 +56,8 @@ const getCachedAdminFlights = withCache(
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession();
-    if (
-      !session?.user?.email ||
-      session.user.email !== process.env.ADMIN_EMAIL
-    ) {
+
+    if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -106,10 +104,7 @@ export async function PUT(request: NextRequest) {
   try {
     const session = await getServerSession();
 
-    if (
-      !session?.user?.email ||
-      session.user.email !== process.env.ADMIN_EMAIL
-    ) {
+    if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -179,10 +174,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const session = await getServerSession();
 
-    if (
-      !session?.user?.email ||
-      session.user.email !== process.env.ADMIN_EMAIL
-    ) {
+    if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

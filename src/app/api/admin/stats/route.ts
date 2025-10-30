@@ -6,10 +6,7 @@ import { FLIGHT_COLLECTION } from "@/lib/models/Flight";
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession();
-    if (
-      !session?.user?.email ||
-      session.user.email !== process.env.ADMIN_EMAIL
-    ) {
+    if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
