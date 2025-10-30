@@ -8,9 +8,9 @@ interface ClientWrapperProps {
   showPreloader?: boolean;
 }
 
-export default function ClientWrapper({ 
-  children, 
-  showPreloader = true 
+export default function ClientWrapper({
+  children,
+  showPreloader = true,
 }: ClientWrapperProps) {
   const [isLoading, setIsLoading] = useState(showPreloader);
   const [isReady, setIsReady] = useState(false);
@@ -24,18 +24,17 @@ export default function ClientWrapper({
           // 预加载字体
           document.fonts.ready,
           // 等待DOM完全加载
-          new Promise(resolve => {
-            if (document.readyState === 'complete') {
+          new Promise((resolve) => {
+            if (document.readyState === "complete") {
               resolve(void 0);
             } else {
-              window.addEventListener('load', () => resolve(void 0));
+              window.addEventListener("load", () => resolve(void 0));
             }
           }),
         ]);
 
         setIsReady(true);
-      } catch (error) {
-        console.error('App initialization error:', error);
+      } catch {
         setIsReady(true);
       }
     };

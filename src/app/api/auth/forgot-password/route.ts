@@ -72,8 +72,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       message: "如果该邮箱存在，重置链接已发送",
     });
-  } catch (error) {
-    console.error("Forgot password error:", error);
+  } catch {
     return NextResponse.json(
       { error: "发送重置邮件失败，请重试" },
       { status: 500 }

@@ -39,11 +39,14 @@ export default function FlightDetail({ flight }: FlightDetailProps) {
 
   const handleBookingClick = () => {
     // 检测是否为移动设备
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-    
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      ) || window.innerWidth <= 768;
+
     if (isMobile) {
       // 移动端拨打电话
-      window.location.href = 'tel:3314238522';
+      window.location.href = "tel:3314238522";
     } else {
       // 桌面端显示微信二维码
       setShowQRCode(true);
@@ -561,7 +564,9 @@ export default function FlightDetail({ flight }: FlightDetailProps) {
                 <Button
                   className="w-full h-12 sm:h-14 text-base sm:text-lg font-bold bg-linear-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-gray-400 disabled:hover:to-gray-400"
                   disabled={flight.status !== "active"}
-                  onClick={flight.status === "active" ? handleBookingClick : undefined}
+                  onClick={
+                    flight.status === "active" ? handleBookingClick : undefined
+                  }
                 >
                   {flight.status === "active"
                     ? "立即预订"
@@ -572,22 +577,32 @@ export default function FlightDetail({ flight }: FlightDetailProps) {
 
                 {/* 微信二维码弹窗 */}
                 {showQRCode && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowQRCode(false)}>
-                    <div className="bg-white p-6 rounded-lg max-w-sm mx-4" onClick={(e) => e.stopPropagation()}>
+                  <div
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                    onClick={() => setShowQRCode(false)}
+                  >
+                    <div
+                      className="bg-white p-6 rounded-lg max-w-sm mx-4"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <div className="text-center space-y-4">
-                        <h3 className="text-lg font-semibold">扫描二维码添加微信咨询</h3>
+                        <h3 className="text-lg font-semibold">
+                          扫描二维码添加微信咨询
+                        </h3>
                         <div className="flex justify-center">
-                          <Image 
-                            src="/images/wechat-qr.svg" 
-                            alt="微信二维码" 
-                            width={200} 
+                          <Image
+                            src="/images/wechat-qr.svg"
+                            alt="微信二维码"
+                            width={200}
                             height={200}
                             className="border border-gray-200 rounded"
                           />
                         </div>
-                        <p className="text-sm text-gray-600">微信号：3314238522</p>
-                        <Button 
-                          variant="outline" 
+                        <p className="text-sm text-gray-600">
+                          微信号：3314238522
+                        </p>
+                        <Button
+                          variant="outline"
                           onClick={() => setShowQRCode(false)}
                           className="w-full"
                         >
@@ -618,8 +633,12 @@ export default function FlightDetail({ flight }: FlightDetailProps) {
                     <Phone className="h-4 w-4 text-blue-600 shrink-0" />
                   </div>
                   <div>
-                    <div className="font-medium text-gray-900 text-xs sm:text-sm">联系电话</div>
-                    <div className="text-xs text-gray-600">3314238522（微信同号）</div>
+                    <div className="font-medium text-gray-900 text-xs sm:text-sm">
+                      联系电话
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      3314238522（微信同号）
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-linear-to-r from-white to-green-50 rounded-lg border border-green-100 shadow-sm hover:shadow-md transition-shadow">
@@ -627,8 +646,12 @@ export default function FlightDetail({ flight }: FlightDetailProps) {
                     <Mail className="h-4 w-4 text-green-600 shrink-0" />
                   </div>
                   <div>
-                    <div className="font-medium text-gray-900 text-xs sm:text-sm">邮箱</div>
-                    <div className="text-xs text-gray-600 break-all">lunariparazione@gmail.com</div>
+                    <div className="font-medium text-gray-900 text-xs sm:text-sm">
+                      邮箱
+                    </div>
+                    <div className="text-xs text-gray-600 break-all">
+                      lunariparazione@gmail.com
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-linear-to-r from-white to-purple-50 rounded-lg border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
@@ -636,8 +659,12 @@ export default function FlightDetail({ flight }: FlightDetailProps) {
                     <Clock className="h-4 w-4 text-purple-600 shrink-0" />
                   </div>
                   <div>
-                    <div className="font-medium text-gray-900 text-xs sm:text-sm">在线时间</div>
-                    <div className="text-xs text-gray-600">每天 9:30 - 20:00</div>
+                    <div className="font-medium text-gray-900 text-xs sm:text-sm">
+                      在线时间
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      每天 9:30 - 20:00
+                    </div>
                   </div>
                 </div>
               </CardContent>

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plane, Mail, ArrowLeft, Loader2 } from "lucide-react";
+import { Plane, Mail, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 export default function ForgotPasswordPage() {
@@ -36,7 +36,7 @@ export default function ForgotPasswordPage() {
       } else {
         setError(data.error || "发送失败");
       }
-    } catch (error) {
+    } catch {
       setError("发送失败，请重试");
     } finally {
       setLoading(false);

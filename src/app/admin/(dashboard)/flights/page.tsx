@@ -26,8 +26,7 @@ async function getFlightsData(): Promise<IFlight[]> {
 
     const flightsData = await response.json();
     return flightsData.flights || [];
-  } catch (error) {
-    console.error("Error fetching flights:", error);
+  } catch {
     return [];
   }
 }

@@ -1,23 +1,26 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
-import { r2Client, R2_BUCKET_NAME, IMAGE_CONFIG, generateUniqueFileName, getImagePublicUrl } from '@/lib/r2-config';
+import { NextRequest, NextResponse } from "next/server";
+import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import {
+  r2Client,
+  R2_BUCKET_NAME,
+  IMAGE_CONFIG,
+  generateUniqueFileName,
+  getImagePublicUrl,
+} from "@/lib/r2-config";
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as File;
-    
+    const file = formData.get("file") as File;
+
     if (!file) {
-      return NextResponse.json(
-        { error: '没有找到文件' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "没有找到文件" }, { status: 400 });
     }
 
     // 验证文件类型
     if (!IMAGE_CONFIG.allowedTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: '不支持的文件类型。支持的格式：JPG, PNG, WebP, SVG' },
+        { error: "不支持的文件类型。支持的格式：JPG, PNG, WebP, SVG" },
         { status: 400 }
       );
     }
@@ -25,21 +28,25 @@ export async function POST(request: NextRequest) {
     // 验证文件大小
     if (file.size > IMAGE_CONFIG.maxSize) {
       return NextResponse.json(
-        { error: `文件大小超过限制。最大允许 ${IMAGE_CONFIG.maxSize / 1024 / 1024}MB` },
+        {
+          error: `文件大小超过限制。最大允许 ${
+            IMAGE_CONFIG.maxSize / 1024 / 1024
+          }MB`,
+        },
         { status: 400 }
       );
     }
 
     // 生成唯一文件名
     const fileName = generateUniqueFileName(file.name);
-    
+
     // 将文件转换为 Buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
     // 对原始文件名进行编码以避免特殊字符问题
     const encodedOriginalName = encodeURIComponent(file.name);
-    
+
     // 上传到 R2
     const uploadCommand = new PutObjectCommand({
       Bucket: R2_BUCKET_NAME,
@@ -48,11 +55,11 @@ export async function POST(request: NextRequest) {
       ContentType: file.type,
       ContentLength: buffer.length,
       // 设置缓存控制
-      CacheControl: 'public, max-age=31536000', // 1年缓存
+      CacheControl: "public, max-age=31536000", // 1年缓存
       // 设置元数据 - 使用编码后的文件名避免特殊字符问题
       Metadata: {
         originalname: encodedOriginalName, // 使用小写且编码后的名称
-        uploadedat: new Date().toISOString().replace(/[^a-zA-Z0-9]/g, ''), // 移除特殊字符
+        uploadedat: new Date().toISOString().replace(/[^a-zA-Z0-9]/g, ""), // 移除特殊字符
       },
     });
 
@@ -69,11 +76,9 @@ export async function POST(request: NextRequest) {
       size: file.size,
       type: file.type,
     });
-
-  } catch (error) {
-    console.error('图片上传失败:', error);
+  } catch {
     return NextResponse.json(
-      { error: '图片上传失败，请稍后重试' },
+      { error: "图片上传失败，请稍后重试" },
       { status: 500 }
     );
   }
@@ -83,13 +88,10 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const key = searchParams.get('key');
+    const key = searchParams.get("key");
 
     if (!key) {
-      return NextResponse.json(
-        { error: '缺少文件key参数' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "缺少文件key参数" }, { status: 400 });
     }
 
     // 从 R2 删除文件
@@ -102,13 +104,11 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: '图片删除成功',
+      message: "图片删除成功",
     });
-
-  } catch (error) {
-    console.error('图片删除失败:', error);
+  } catch  {
     return NextResponse.json(
-      { error: '图片删除失败，请稍后重试' },
+      { error: "图片删除失败，请稍后重试" },
       { status: 500 }
     );
   }

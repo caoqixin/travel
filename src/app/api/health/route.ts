@@ -257,8 +257,7 @@ export async function GET(request: NextRequest) {
     );
 
     return response;
-  } catch (error) {
-    console.error("Health check error:", error);
+  } catch  {
 
     const errorResult: HealthCheckResult = {
       status: "unhealthy",

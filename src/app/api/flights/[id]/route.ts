@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { ObjectId } from "mongodb";
-import { IFlight, FLIGHT_COLLECTION, validateFlight } from "@/lib/models/Flight";
+import {
+  IFlight,
+  FLIGHT_COLLECTION,
+  validateFlight,
+} from "@/lib/models/Flight";
 import { auth } from "@/lib/auth";
 import { getDatabase } from "@/lib/mongodb";
 
@@ -22,18 +26,21 @@ export async function GET(
     const flight = await collection.findOne({ _id: new ObjectId(id) });
 
     if (!flight) {
-      return NextResponse.json({ 
-        success: false, 
-        error: "Flight not found" 
-      }, { status: 404 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Flight not found",
+        },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json({
       success: true,
-      flight
+      flight,
     });
-  } catch (error) {
-    console.error("Error fetching flight:", error);
+  } catch {
+    // console.error("Error fetching flight:", error);
     return NextResponse.json(
       { error: "Failed to fetch flight" },
       { status: 500 }
@@ -64,10 +71,10 @@ export async function PUT(
     }
 
     const data = await request.json();
-    
+
     // 验证数据
     const validationErrors = validateFlight(data);
-    
+
     if (validationErrors.length > 0) {
       return NextResponse.json(
         { error: "Validation failed", details: validationErrors },
@@ -89,13 +96,12 @@ export async function PUT(
     }
 
     // 更新页面缓存
-    revalidatePath('/');
-    revalidatePath('/admin/flights');
+    revalidatePath("/");
+    revalidatePath("/admin/flights");
     revalidatePath(`/flights/${id}`);
 
     return NextResponse.json(result);
-  } catch (error) {
-    console.error("Error updating flight:", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to update flight" },
       { status: 500 }
@@ -126,7 +132,7 @@ export async function PATCH(
     }
 
     const data = await request.json();
-    
+
     // 对于PATCH请求，只验证提供的字段
     // 添加更新时间
     data.updatedAt = new Date();
@@ -142,16 +148,15 @@ export async function PATCH(
     }
 
     // 更新页面缓存
-    revalidatePath('/');
-    revalidatePath('/admin/flights');
+    revalidatePath("/");
+    revalidatePath("/admin/flights");
     revalidatePath(`/flights/${id}`);
 
     return NextResponse.json({
       success: true,
-      flight: result
+      flight: result,
     });
-  } catch (error) {
-    console.error("Error updating flight:", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to update flight" },
       { status: 500 }
@@ -188,13 +193,12 @@ export async function DELETE(
     }
 
     // 更新页面缓存
-    revalidatePath('/');
-    revalidatePath('/flights');
-    revalidatePath('/admin/flights');
+    revalidatePath("/");
+    revalidatePath("/flights");
+    revalidatePath("/admin/flights");
 
     return NextResponse.json({ message: "Flight deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting flight:", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to delete flight" },
       { status: 500 }

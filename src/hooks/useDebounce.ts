@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 /**
  * 防抖Hook - 延迟更新值直到指定时间内没有新的更新
@@ -34,7 +34,9 @@ export function useDebounceCallback<T extends (...args: any[]) => any>(
   delay: number,
   deps: React.DependencyList = []
 ): T {
-  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
+  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
+    null
+  );
 
   const debouncedCallback = ((...args: Parameters<T>) => {
     if (debounceTimer) {

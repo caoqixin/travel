@@ -15,10 +15,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (password.length < 6) {
-      return NextResponse.json(
-        { error: "密码长度至少为6位" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "密码长度至少为6位" }, { status: 400 });
     }
 
     // 连接数据库
@@ -57,8 +54,7 @@ export async function POST(request: NextRequest) {
     );
 
     return NextResponse.json({ message: "密码重置成功" });
-  } catch (error) {
-    console.error("Reset password error:", error);
+  } catch {
     return NextResponse.json(
       { error: "密码重置失败，请重试" },
       { status: 500 }

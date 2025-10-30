@@ -40,8 +40,7 @@ async function getInitialFlights() {
       );
       return { flights: [], totalPages: 1 };
     }
-  } catch (error) {
-    console.error("Error fetching initial flights:", error);
+  } catch {
     return { flights: [], totalPages: 1 };
   }
 }

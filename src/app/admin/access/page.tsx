@@ -4,7 +4,13 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Lock, Shield } from "lucide-react";
 
@@ -34,7 +40,9 @@ function AdminAccessForm() {
 
       if (response.ok && data.success) {
         // 密钥正确，设置cookie并重定向
-        document.cookie = `admin-access-key=${accessKey}; path=/; max-age=${7 * 24 * 60 * 60}`; // 7天过期
+        document.cookie = `admin-access-key=${accessKey}; path=/; max-age=${
+          7 * 24 * 60 * 60
+        }`; // 7天过期
         router.push(callbackUrl);
       } else {
         // 密钥错误，跳转到首页
@@ -43,7 +51,7 @@ function AdminAccessForm() {
           router.push("/");
         }, 2000);
       }
-    } catch (error) {
+    } catch {
       setError("验证失败，请重试");
     } finally {
       setIsLoading(false);
@@ -58,9 +66,7 @@ function AdminAccessForm() {
             <Shield className="h-6 w-6 text-blue-600" />
           </div>
           <CardTitle className="text-2xl font-bold">管理员访问验证</CardTitle>
-          <CardDescription>
-            请输入管理员访问密钥以继续
-          </CardDescription>
+          <CardDescription>请输入管理员访问密钥以继续</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -115,11 +121,13 @@ function AdminAccessForm() {
 
 export default function AdminAccessPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      }
+    >
       <AdminAccessForm />
     </Suspense>
   );

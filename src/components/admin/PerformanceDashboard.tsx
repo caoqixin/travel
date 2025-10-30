@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { 
-  Activity, 
-  Database, 
-  Zap, 
-  MemoryStick, 
-  Clock, 
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import {
+  Activity,
+  Database,
+  Zap,
+  MemoryStick,
+  Clock,
   AlertTriangle,
   CheckCircle,
   XCircle,
@@ -18,11 +18,11 @@ import {
   TrendingUp,
   TrendingDown,
   Users,
-  Server
-} from 'lucide-react';
+  Server,
+} from "lucide-react";
 
 interface HealthCheckResult {
-  status: 'healthy' | 'degraded' | 'unhealthy';
+  status: "healthy" | "degraded" | "unhealthy";
   timestamp: string;
   uptime: number;
   version: string;
@@ -42,7 +42,7 @@ interface HealthCheckResult {
 }
 
 interface HealthCheck {
-  status: 'pass' | 'warn' | 'fail';
+  status: "pass" | "warn" | "fail";
   message: string;
   responseTime?: number;
   details?: any;
@@ -69,7 +69,8 @@ interface PerformanceStats {
 
 const PerformanceDashboard: React.FC = () => {
   const [healthData, setHealthData] = useState<HealthCheckResult | null>(null);
-  const [performanceData, setPerformanceData] = useState<PerformanceStats | null>(null);
+  const [performanceData, setPerformanceData] =
+    useState<PerformanceStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
@@ -77,22 +78,22 @@ const PerformanceDashboard: React.FC = () => {
   // 获取健康检查数据
   const fetchHealthData = async () => {
     try {
-      const response = await fetch('/api/health');
+      const response = await fetch("/api/health");
       const data = await response.json();
       setHealthData(data);
     } catch (error) {
-      console.error('Failed to fetch health data:', error);
+      console.error("Failed to fetch health data:", error);
     }
   };
 
   // 获取性能数据
   const fetchPerformanceData = async () => {
     try {
-      const response = await fetch('/api/admin/performance');
+      const response = await fetch("/api/admin/performance");
       const data = await response.json();
       setPerformanceData(data);
     } catch (error) {
-      console.error('Failed to fetch performance data:', error);
+      console.error("Failed to fetch performance data:", error);
     }
   };
 
@@ -107,7 +108,7 @@ const PerformanceDashboard: React.FC = () => {
   // 自动刷新
   useEffect(() => {
     refreshData();
-    
+
     if (autoRefresh) {
       const interval = setInterval(refreshData, 30000); // 30秒刷新一次
       return () => clearInterval(interval);
@@ -117,14 +118,14 @@ const PerformanceDashboard: React.FC = () => {
   // 状态图标
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'pass':
-      case 'healthy':
+      case "pass":
+      case "healthy":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'warn':
-      case 'degraded':
+      case "warn":
+      case "degraded":
         return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
-      case 'fail':
-      case 'unhealthy':
+      case "fail":
+      case "unhealthy":
         return <XCircle className="h-4 w-4 text-red-500" />;
       default:
         return <Activity className="h-4 w-4 text-gray-500" />;
@@ -133,9 +134,13 @@ const PerformanceDashboard: React.FC = () => {
 
   // 状态徽章
   const getStatusBadge = (status: string) => {
-    const variant = status === 'pass' || status === 'healthy' ? 'default' :
-                   status === 'warn' || status === 'degraded' ? 'secondary' : 'destructive';
-    
+    const variant =
+      status === "pass" || status === "healthy"
+        ? "default"
+        : status === "warn" || status === "degraded"
+        ? "secondary"
+        : "destructive";
+
     return (
       <Badge variant={variant} className="flex items-center gap-1">
         {getStatusIcon(status)}
@@ -149,7 +154,7 @@ const PerformanceDashboard: React.FC = () => {
     const days = Math.floor(seconds / 86400);
     const hours = Math.floor((seconds % 86400) / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
-    
+
     if (days > 0) return `${days}d ${hours}h ${minutes}m`;
     if (hours > 0) return `${hours}h ${minutes}m`;
     return `${minutes}m`;
@@ -187,7 +192,7 @@ const PerformanceDashboard: React.FC = () => {
             size="sm"
             onClick={() => setAutoRefresh(!autoRefresh)}
           >
-            {autoRefresh ? '停止自动刷新' : '开启自动刷新'}
+            {autoRefresh ? "停止自动刷新" : "开启自动刷新"}
           </Button>
           <Button
             variant="outline"
@@ -195,7 +200,9 @@ const PerformanceDashboard: React.FC = () => {
             onClick={refreshData}
             disabled={loading}
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
+            />
             刷新
           </Button>
         </div>
@@ -343,9 +350,17 @@ const PerformanceDashboard: React.FC = () => {
               </p>
               {healthData.checks.performance.details && (
                 <div className="text-xs text-gray-500 space-y-1">
-                  <p>平均响应: {healthData.checks.performance.details.avgResponseTime}</p>
-                  <p>最大响应: {healthData.checks.performance.details.maxResponseTime}</p>
-                  <p>错误率: {healthData.checks.performance.details.errorRate}</p>
+                  <p>
+                    平均响应:{" "}
+                    {healthData.checks.performance.details.avgResponseTime}
+                  </p>
+                  <p>
+                    最大响应:{" "}
+                    {healthData.checks.performance.details.maxResponseTime}
+                  </p>
+                  <p>
+                    错误率: {healthData.checks.performance.details.errorRate}
+                  </p>
                 </div>
               )}
             </CardContent>
@@ -366,8 +381,15 @@ const PerformanceDashboard: React.FC = () => {
               </p>
               {healthData.checks.concurrency.details && (
                 <div className="text-xs text-gray-500 space-y-1">
-                  <p>队列长度: {healthData.checks.concurrency.details.requestQueue?.queueLength || 0}</p>
-                  <p>连接池使用: {healthData.checks.concurrency.details.poolUsagePercent}</p>
+                  <p>
+                    队列长度:{" "}
+                    {healthData.checks.concurrency.details.requestQueue
+                      ?.queueLength || 0}
+                  </p>
+                  <p>
+                    连接池使用:{" "}
+                    {healthData.checks.concurrency.details.poolUsagePercent}
+                  </p>
                 </div>
               )}
             </CardContent>
@@ -416,12 +438,17 @@ const PerformanceDashboard: React.FC = () => {
             <div className="mt-6">
               <h4 className="font-semibold mb-3">HTTP状态码分布</h4>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {Object.entries(performanceData.statusCodes).map(([code, count]) => (
-                  <div key={code} className="text-center p-2 bg-gray-50 rounded">
-                    <p className="font-bold">{code}</p>
-                    <p className="text-sm text-gray-600">{count}</p>
-                  </div>
-                ))}
+                {Object.entries(performanceData.statusCodes).map(
+                  ([code, count]) => (
+                    <div
+                      key={code}
+                      className="text-center p-2 bg-gray-50 rounded"
+                    >
+                      <p className="font-bold">{code}</p>
+                      <p className="text-sm text-gray-600">{count}</p>
+                    </div>
+                  )
+                )}
               </div>
             </div>
           </CardContent>

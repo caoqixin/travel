@@ -151,14 +151,6 @@ export function FlightTable({ flights, onDeleteFlight }: FlightTableProps) {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {flights.map((flight, index) => {
-                  // 模拟座位信息，因为IFlight接口中没有座位相关字段
-                  const totalSeats = 180; // 默认座位数
-                  const availableSeats = Math.floor(Math.random() * 50) + 10; // 随机可用座位
-                  const seatInfo = getSeatUtilization(
-                    availableSeats,
-                    totalSeats
-                  );
-
                   return (
                     <tr
                       key={flight._id.toString()}

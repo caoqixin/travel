@@ -29,8 +29,7 @@ async function getFlight(id: string): Promise<IFlight | null> {
       );
       return null;
     }
-  } catch (error) {
-    console.error("Error fetching flight:", error);
+  } catch {
     return null;
   }
 }

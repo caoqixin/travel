@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -58,10 +58,13 @@ export default function FlightSearch({
   }, []);
 
   // 稳定的防抖搜索函数
-  const debouncedSearch = useCallback(
-    debounce((dest: string, sort: string) => {
-      onSearchRef.current({ destination: dest, sortBy: sort });
-    }, 500),
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(
+        (dest: string, sort: string) =>
+          onSearchRef.current({ destination: dest, sortBy: sort }),
+        500
+      ),
     []
   );
 

@@ -15,6 +15,13 @@ export default function Preloader({
   const [isVisible, setIsVisible] = useState(true);
   const [progress, setProgress] = useState(0);
 
+  const handleComplete = () => {
+    setIsVisible(false);
+    setTimeout(() => {
+      onComplete?.();
+    }, 300);
+  };
+
   useEffect(() => {
     // 模拟加载进度
     const progressInterval = setInterval(() => {
@@ -46,13 +53,6 @@ export default function Preloader({
       return () => clearTimeout(timer);
     }
   }, [progress]);
-
-  const handleComplete = () => {
-    setIsVisible(false);
-    setTimeout(() => {
-      onComplete?.();
-    }, 300);
-  };
 
   if (!isVisible) return null;
 

@@ -16,7 +16,9 @@ export function NewFlightContainer() {
     try {
       // 数据验证和清理
       const validateAndClean = (value: any, defaultValue: any = "") => {
-        return value && value.toString().trim() !== "" ? value.toString().trim() : defaultValue;
+        return value && value.toString().trim() !== ""
+          ? value.toString().trim()
+          : defaultValue;
       };
 
       // 验证必填字段
@@ -54,8 +56,14 @@ export function NewFlightContainer() {
           { field: data.returnFlight?.flightNumber, name: "返程航班号" },
           { field: data.returnFlight?.flightDuration, name: "返程飞行时长" },
           { field: data.returnFlight?.departure?.city, name: "返程出发城市" },
-          { field: data.returnFlight?.departure?.airport, name: "返程出发机场" },
-          { field: data.returnFlight?.departure?.code, name: "返程出发机场代码" },
+          {
+            field: data.returnFlight?.departure?.airport,
+            name: "返程出发机场",
+          },
+          {
+            field: data.returnFlight?.departure?.code,
+            name: "返程出发机场代码",
+          },
           { field: data.returnFlight?.departure?.time, name: "返程出发时间" },
           { field: data.returnFlight?.arrival?.city, name: "返程到达城市" },
           { field: data.returnFlight?.arrival?.airport, name: "返程到达机场" },
@@ -76,7 +84,9 @@ export function NewFlightContainer() {
         description: validateAndClean(data.description),
         image: validateAndClean(data.image, "/placeholder-flight.jpg"), // 提供默认图片
         price: Number(data.price),
-        discountPrice: data.discountPrice ? Number(data.discountPrice) : undefined,
+        discountPrice: data.discountPrice
+          ? Number(data.discountPrice)
+          : undefined,
         departure: {
           city: validateAndClean(data.departure.city),
           airport: validateAndClean(data.departure.airport),
@@ -93,34 +103,8 @@ export function NewFlightContainer() {
         },
         flightNumber: validateAndClean(data.flightNumber),
         flightDuration: validateAndClean(data.flightDuration),
-        layovers: data.layovers?.map((layover: any) => ({
-          city: validateAndClean(layover.city),
-          airport: validateAndClean(layover.airport),
-          code: validateAndClean(layover.code),
-          terminal: validateAndClean(layover.terminal),
-          flightNumber: validateAndClean(layover.flightNumber),
-          arrivalTime: new Date(layover.arrivalTime || new Date()),
-          departureTime: new Date(layover.departureTime || new Date()),
-          duration: validateAndClean(layover.duration),
-        })) || [],
-        returnFlight: data.type === "round-trip" && data.returnFlight ? {
-          departure: {
-            city: validateAndClean(data.returnFlight.departure.city),
-            airport: validateAndClean(data.returnFlight.departure.airport),
-            code: validateAndClean(data.returnFlight.departure.code),
-            terminal: validateAndClean(data.returnFlight.departure.terminal),
-            time: new Date(data.returnFlight.departure.time),
-          },
-          arrival: {
-            city: validateAndClean(data.returnFlight.arrival.city),
-            airport: validateAndClean(data.returnFlight.arrival.airport),
-            code: validateAndClean(data.returnFlight.arrival.code),
-            terminal: validateAndClean(data.returnFlight.arrival.terminal),
-            time: new Date(data.returnFlight.arrival.time),
-          },
-          flightNumber: validateAndClean(data.returnFlight.flightNumber),
-          flightDuration: validateAndClean(data.returnFlight.flightDuration),
-          layovers: data.returnFlight.layovers?.map((layover: any) => ({
+        layovers:
+          data.layovers?.map((layover: any) => ({
             city: validateAndClean(layover.city),
             airport: validateAndClean(layover.airport),
             code: validateAndClean(layover.code),
@@ -130,7 +114,48 @@ export function NewFlightContainer() {
             departureTime: new Date(layover.departureTime || new Date()),
             duration: validateAndClean(layover.duration),
           })) || [],
-        } : undefined,
+        returnFlight:
+          data.type === "round-trip" && data.returnFlight
+            ? {
+                departure: {
+                  city: validateAndClean(data.returnFlight.departure.city),
+                  airport: validateAndClean(
+                    data.returnFlight.departure.airport
+                  ),
+                  code: validateAndClean(data.returnFlight.departure.code),
+                  terminal: validateAndClean(
+                    data.returnFlight.departure.terminal
+                  ),
+                  time: new Date(data.returnFlight.departure.time),
+                },
+                arrival: {
+                  city: validateAndClean(data.returnFlight.arrival.city),
+                  airport: validateAndClean(data.returnFlight.arrival.airport),
+                  code: validateAndClean(data.returnFlight.arrival.code),
+                  terminal: validateAndClean(
+                    data.returnFlight.arrival.terminal
+                  ),
+                  time: new Date(data.returnFlight.arrival.time),
+                },
+                flightNumber: validateAndClean(data.returnFlight.flightNumber),
+                flightDuration: validateAndClean(
+                  data.returnFlight.flightDuration
+                ),
+                layovers:
+                  data.returnFlight.layovers?.map((layover: any) => ({
+                    city: validateAndClean(layover.city),
+                    airport: validateAndClean(layover.airport),
+                    code: validateAndClean(layover.code),
+                    terminal: validateAndClean(layover.terminal),
+                    flightNumber: validateAndClean(layover.flightNumber),
+                    arrivalTime: new Date(layover.arrivalTime || new Date()),
+                    departureTime: new Date(
+                      layover.departureTime || new Date()
+                    ),
+                    duration: validateAndClean(layover.duration),
+                  })) || [],
+              }
+            : undefined,
         type: data.type,
         airline: {
           name: validateAndClean(data.airline.name),

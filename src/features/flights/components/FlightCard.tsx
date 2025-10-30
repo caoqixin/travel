@@ -41,7 +41,7 @@ export default function FlightCard({ flight }: FlightCardProps) {
           height={300}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          preload={false}
+          priority={false}
         />
 
         {/* 渐变遮罩 */}
@@ -111,7 +111,11 @@ export default function FlightCard({ flight }: FlightCardProps) {
             <div className="flex items-center justify-between text-sm">
               <div className="text-center flex-1">
                 <div className="font-bold text-gray-900 text-lg">
-                  {formatFlightTime(flight.departure.time instanceof Date ? flight.departure.time.toISOString() : String(flight.departure.time))}
+                  {formatFlightTime(
+                    flight.departure.time instanceof Date
+                      ? flight.departure.time.toISOString()
+                      : String(flight.departure.time)
+                  )}
                 </div>
                 <div className="text-blue-600 font-medium">
                   {flight.departure.city}
@@ -145,7 +149,11 @@ export default function FlightCard({ flight }: FlightCardProps) {
 
               <div className="text-center flex-1">
                 <div className="font-bold text-gray-900 text-lg">
-                  {formatFlightTime(flight.arrival.time instanceof Date ? flight.arrival.time.toISOString() : String(flight.arrival.time))}
+                  {formatFlightTime(
+                    flight.arrival.time instanceof Date
+                      ? flight.arrival.time.toISOString()
+                      : String(flight.arrival.time)
+                  )}
                 </div>
                 <div className="text-blue-600 font-medium">
                   {flight.arrival.city}

@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { ObjectId } from "mongodb";
-import {
-  IFlight,
-  FLIGHT_COLLECTION,
-} from "@/lib/models/Flight";
+import { IFlight, FLIGHT_COLLECTION } from "@/lib/models/Flight";
 import { getServerSession } from "@/lib/auth";
 import { getDatabase } from "@/lib/mongodb";
 import { cache, cacheKeys, cacheTTL, withCache } from "@/lib/cache";
@@ -96,8 +93,7 @@ export async function GET(request: NextRequest) {
         cacheKeys.adminFlights(page, limit, { status, sortBy })
       ),
     });
-  } catch (error) {
-    console.error("Error fetching admin flights:", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch flights" },
       { status: 500 }
@@ -162,16 +158,15 @@ export async function PUT(request: NextRequest) {
     });
 
     // 更新页面缓存
-    revalidatePath('/');
-    revalidatePath('/admin/flights');
+    revalidatePath("/");
+    revalidatePath("/admin/flights");
     revalidatePath(`/flights/${flightId}`);
 
     return NextResponse.json({
       success: true,
       flight: updatedFlight,
     });
-  } catch (error) {
-    console.error("Error updating flight:", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to update flight" },
       { status: 500 }
@@ -211,15 +206,14 @@ export async function DELETE(request: NextRequest) {
     }
 
     // 更新页面缓存
-    revalidatePath('/');
-    revalidatePath('/admin/flights');
+    revalidatePath("/");
+    revalidatePath("/admin/flights");
 
     return NextResponse.json({
       success: true,
       message: "Flight deleted successfully",
     });
-  } catch (error) {
-    console.error("Error deleting flight:", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to delete flight" },
       { status: 500 }

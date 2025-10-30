@@ -36,7 +36,7 @@ function AdminLoginForm() {
         // 登录成功，跳转到回调URL或管理面板
         router.push(callbackUrl);
       }
-    } catch (error) {
+    } catch {
       setError("登录失败，请重试");
     } finally {
       setLoading(false);
@@ -159,11 +159,13 @@ function AdminLoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      }
+    >
       <AdminLoginForm />
     </Suspense>
   );

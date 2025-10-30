@@ -30,15 +30,14 @@ async function getFlight(id: string): Promise<IFlight | null> {
     }
 
     const data = await response.json();
-    
+
     if (data.success) {
       return data.flight as IFlight;
     } else {
       console.error("Failed to fetch flight:", data.error || "Unknown error");
       return null;
     }
-  } catch (error) {
-    console.error("Error fetching flight:", error);
+  } catch {
     return null;
   }
 }

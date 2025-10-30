@@ -152,7 +152,8 @@ export function EditFlightForm({
   const [newAmenity, setNewAmenity] = useState("");
   const [newTag, setNewTag] = useState("");
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
-  const { uploading: imageUploading, uploadImageFile } = useDelayedImageUpload();
+  const { uploading: imageUploading, uploadImageFile } =
+    useDelayedImageUpload();
 
   // 格式化时间为 datetime-local 输入格式
   const formatTimeForInput = (time: Date | string) => {
@@ -286,8 +287,6 @@ export function EditFlightForm({
   const [amenities, setAmenities] = useState<string[]>(flight.amenities || []);
   const [tags, setTags] = useState<string[]>(flight.tags || []);
 
-
-
   const addAmenity = () => {
     if (newAmenity.trim()) {
       const newAmenities = [...amenities, newAmenity.trim()];
@@ -340,7 +339,7 @@ export function EditFlightForm({
 
   // 处理表单提交，包括图片上传
   const handleFormSubmit = async (data: FlightFormData) => {
-    let finalData = { ...data };
+    const finalData = { ...data };
 
     // 如果有选择的图片文件，先上传图片
     if (selectedImageFile) {
@@ -359,7 +358,10 @@ export function EditFlightForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(handleFormSubmit)}
+        className="space-y-8"
+      >
         {/* 基本信息 */}
         <Card>
           <CardHeader>
@@ -841,10 +843,7 @@ export function EditFlightForm({
                         <FormItem>
                           <FormLabel>到达时间</FormLabel>
                           <FormControl>
-                            <Input
-                              type="datetime-local"
-                              {...field}
-                            />
+                            <Input type="datetime-local" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -858,10 +857,7 @@ export function EditFlightForm({
                         <FormItem>
                           <FormLabel>出发时间</FormLabel>
                           <FormControl>
-                            <Input
-                              type="datetime-local"
-                              {...field}
-                            />
+                            <Input type="datetime-local" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -889,7 +885,11 @@ export function EditFlightForm({
                     <FormItem>
                       <FormLabel>返程航班号</FormLabel>
                       <FormControl>
-                        <Input placeholder="CA5678" {...field} value={field.value || ""} />
+                        <Input
+                          placeholder="CA5678"
+                          {...field}
+                          value={field.value || ""}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -903,7 +903,11 @@ export function EditFlightForm({
                     <FormItem>
                       <FormLabel>返程飞行时长</FormLabel>
                       <FormControl>
-                        <Input placeholder="2小时30分钟" {...field} value={field.value || ""} />
+                        <Input
+                          placeholder="2小时30分钟"
+                          {...field}
+                          value={field.value || ""}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -923,7 +927,11 @@ export function EditFlightForm({
                       <FormItem>
                         <FormLabel>出发城市</FormLabel>
                         <FormControl>
-                          <Input placeholder="上海" {...field} value={field.value || ""} />
+                          <Input
+                            placeholder="上海"
+                            {...field}
+                            value={field.value || ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -937,7 +945,11 @@ export function EditFlightForm({
                       <FormItem>
                         <FormLabel>出发机场</FormLabel>
                         <FormControl>
-                          <Input placeholder="浦东国际机场" {...field} value={field.value || ""} />
+                          <Input
+                            placeholder="浦东国际机场"
+                            {...field}
+                            value={field.value || ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -951,7 +963,11 @@ export function EditFlightForm({
                       <FormItem>
                         <FormLabel>机场代码</FormLabel>
                         <FormControl>
-                          <Input placeholder="PVG" {...field} value={field.value || ""} />
+                          <Input
+                            placeholder="PVG"
+                            {...field}
+                            value={field.value || ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -965,7 +981,11 @@ export function EditFlightForm({
                       <FormItem>
                         <FormLabel>候机楼</FormLabel>
                         <FormControl>
-                          <Input placeholder="T2" {...field} value={field.value || ""} />
+                          <Input
+                            placeholder="T2"
+                            {...field}
+                            value={field.value || ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -979,7 +999,11 @@ export function EditFlightForm({
                       <FormItem>
                         <FormLabel>出发时间</FormLabel>
                         <FormControl>
-                          <Input type="datetime-local" {...field} value={field.value || ""} />
+                          <Input
+                            type="datetime-local"
+                            {...field}
+                            value={field.value || ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -998,7 +1022,11 @@ export function EditFlightForm({
                       <FormItem>
                         <FormLabel>到达城市</FormLabel>
                         <FormControl>
-                          <Input placeholder="北京" {...field} value={field.value || ""} />
+                          <Input
+                            placeholder="北京"
+                            {...field}
+                            value={field.value || ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -1012,7 +1040,11 @@ export function EditFlightForm({
                       <FormItem>
                         <FormLabel>到达机场</FormLabel>
                         <FormControl>
-                          <Input placeholder="首都国际机场" {...field} value={field.value || ""} />
+                          <Input
+                            placeholder="首都国际机场"
+                            {...field}
+                            value={field.value || ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -1026,7 +1058,11 @@ export function EditFlightForm({
                       <FormItem>
                         <FormLabel>机场代码</FormLabel>
                         <FormControl>
-                          <Input placeholder="PEK" {...field} value={field.value || ""} />
+                          <Input
+                            placeholder="PEK"
+                            {...field}
+                            value={field.value || ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -1040,7 +1076,11 @@ export function EditFlightForm({
                       <FormItem>
                         <FormLabel>候机楼</FormLabel>
                         <FormControl>
-                          <Input placeholder="T3" {...field} value={field.value || ""} />
+                          <Input
+                            placeholder="T3"
+                            {...field}
+                            value={field.value || ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -1054,7 +1094,11 @@ export function EditFlightForm({
                       <FormItem>
                         <FormLabel>到达时间</FormLabel>
                         <FormControl>
-                          <Input type="datetime-local" {...field} value={field.value || ""} />
+                          <Input
+                            type="datetime-local"
+                            {...field}
+                            value={field.value || ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -1114,7 +1158,11 @@ export function EditFlightForm({
                           <FormItem>
                             <FormLabel>中转城市</FormLabel>
                             <FormControl>
-                              <Input placeholder="迪拜" {...field} value={field.value || ""} />
+                              <Input
+                                placeholder="迪拜"
+                                {...field}
+                                value={field.value || ""}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -1128,7 +1176,11 @@ export function EditFlightForm({
                           <FormItem>
                             <FormLabel>中转机场</FormLabel>
                             <FormControl>
-                              <Input placeholder="迪拜国际机场" {...field} value={field.value || ""} />
+                              <Input
+                                placeholder="迪拜国际机场"
+                                {...field}
+                                value={field.value || ""}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -1142,7 +1194,11 @@ export function EditFlightForm({
                           <FormItem>
                             <FormLabel>机场代码</FormLabel>
                             <FormControl>
-                              <Input placeholder="DXB" {...field} value={field.value || ""} />
+                              <Input
+                                placeholder="DXB"
+                                {...field}
+                                value={field.value || ""}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -1156,7 +1212,11 @@ export function EditFlightForm({
                           <FormItem>
                             <FormLabel>候机楼</FormLabel>
                             <FormControl>
-                              <Input placeholder="T3" {...field} value={field.value || ""} />
+                              <Input
+                                placeholder="T3"
+                                {...field}
+                                value={field.value || ""}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -1170,7 +1230,11 @@ export function EditFlightForm({
                           <FormItem>
                             <FormLabel>航班号</FormLabel>
                             <FormControl>
-                              <Input placeholder="EK9012" {...field} value={field.value || ""} />
+                              <Input
+                                placeholder="EK9012"
+                                {...field}
+                                value={field.value || ""}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -1184,7 +1248,11 @@ export function EditFlightForm({
                           <FormItem>
                             <FormLabel>中转时长</FormLabel>
                             <FormControl>
-                              <Input placeholder="2小时" {...field} value={field.value || ""} />
+                              <Input
+                                placeholder="2小时"
+                                {...field}
+                                value={field.value || ""}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -1454,8 +1522,16 @@ export function EditFlightForm({
           </CardContent>
         </Card>
 
-        <Button type="submit" className="w-full" disabled={isLoading || imageUploading}>
-          {imageUploading ? "上传图片中..." : isLoading ? "更新中..." : "更新航班"}
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isLoading || imageUploading}
+        >
+          {imageUploading
+            ? "上传图片中..."
+            : isLoading
+            ? "更新中..."
+            : "更新航班"}
         </Button>
       </form>
     </Form>

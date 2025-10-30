@@ -25,8 +25,7 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
-  } catch (error) {
-    console.error("验证访问密钥时出错:", error);
+  } catch {
     return NextResponse.json(
       { success: false, message: "服务器内部错误" },
       { status: 500 }
