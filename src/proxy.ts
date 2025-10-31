@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getSessionCookie } from "better-auth/cookies";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -41,8 +42,8 @@ async function handleAdminRoutes(request: NextRequest) {
     accessKeyCookie?.value === process.env.ADMIN_ACCESS_KEY;
 
   // 检查用户认证状态
-  const sessionCookie = request.cookies.get("better-auth.session_token");
-  const isAuthenticated = !!sessionCookie?.value;
+  const sessionCookie = getSessionCookie(request);
+  const isAuthenticated = !!sessionCookie;
 
   // 定义特殊页面
   const isAccessPage = pathname === "/admin/access";

@@ -1,5 +1,6 @@
 import { ResponsiveDashboardLayout } from "@/components/layout/ResponsiveDashboardLayout";
 import { getServerSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
   children,
@@ -9,7 +10,7 @@ export default async function DashboardLayout({
   const session = await getServerSession();
 
   if (!session) {
-    return null;
+    redirect("/admin/login");
   }
 
   return (
