@@ -9,6 +9,19 @@ interface FlightDetailPageProps {
   }>;
 }
 
+export async function generateStaticParams() {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const response = await fetch(`${baseUrl}/api/flights`, {
+    cache: "no-store", // 确保获取最新数据
+  });
+
+  const flights = await response.json();
+
+  return flights.data.map((flight: IFlight) => ({
+    id: flight._id.toString(),
+  }));
+}
+
 export const metadata: Metadata = {
   title: "航班详情 - 管理后台",
   description: "查看航班详细信息",
