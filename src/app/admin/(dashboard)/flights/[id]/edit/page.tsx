@@ -14,19 +14,6 @@ export const metadata: Metadata = {
   description: "编辑航班信息",
 };
 
-export async function generateStaticParams() {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-  const response = await fetch(`${baseUrl}/api/flights`, {
-    cache: "no-store", // 确保获取最新数据
-  });
-
-  const flights = await response.json();
-
-  return flights.data.map((flight: IFlight) => ({
-    id: flight._id.toString(),
-  }));
-}
-
 async function getFlight(id: string): Promise<IFlight | null> {
   try {
     const response = await fetch(
