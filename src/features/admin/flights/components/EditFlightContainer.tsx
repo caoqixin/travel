@@ -7,9 +7,10 @@ import { IFlight } from "@/lib/models/Flight";
 import { EditFlightForm, FlightFormData } from "./EditFlightForm";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { WithId } from "mongodb";
 
 interface EditFlightContainerProps {
-  initialFlight: IFlight;
+  initialFlight: WithId<IFlight>;
 }
 
 export function EditFlightContainer({
@@ -24,7 +25,7 @@ export function EditFlightContainer({
     try {
       // 客户端验证和数据清理
       const validateAndClean = (value: any) => {
-        if (typeof value === 'string') {
+        if (typeof value === "string") {
           return value.trim() || undefined;
         }
         return value;
@@ -32,7 +33,7 @@ export function EditFlightContainer({
 
       // 验证必填字段
       const errors: string[] = [];
-      
+
       if (!validateAndClean(formData.title)) {
         errors.push("航班标题不能为空");
       }
@@ -42,10 +43,20 @@ export function EditFlightContainer({
       if (!validateAndClean(formData.flightDuration)) {
         errors.push("飞行时长不能为空");
       }
-      if (!formData.departure?.city || !formData.departure?.airport || !formData.departure?.code || !formData.departure?.time) {
+      if (
+        !formData.departure?.city ||
+        !formData.departure?.airport ||
+        !formData.departure?.code ||
+        !formData.departure?.time
+      ) {
         errors.push("出发信息不完整");
       }
-      if (!formData.arrival?.city || !formData.arrival?.airport || !formData.arrival?.code || !formData.arrival?.time) {
+      if (
+        !formData.arrival?.city ||
+        !formData.arrival?.airport ||
+        !formData.arrival?.code ||
+        !formData.arrival?.time
+      ) {
         errors.push("到达信息不完整");
       }
       if (!formData.airline?.name || !formData.airline?.code) {
@@ -57,12 +68,20 @@ export function EditFlightContainer({
 
       // 验证往返航班
       if (formData.type === "round-trip" && formData.returnFlight) {
-        if (!formData.returnFlight.departure?.city || !formData.returnFlight.departure?.airport || 
-            !formData.returnFlight.departure?.code || !formData.returnFlight.departure?.time) {
+        if (
+          !formData.returnFlight.departure?.city ||
+          !formData.returnFlight.departure?.airport ||
+          !formData.returnFlight.departure?.code ||
+          !formData.returnFlight.departure?.time
+        ) {
           errors.push("返程出发信息不完整");
         }
-        if (!formData.returnFlight.arrival?.city || !formData.returnFlight.arrival?.airport || 
-            !formData.returnFlight.arrival?.code || !formData.returnFlight.arrival?.time) {
+        if (
+          !formData.returnFlight.arrival?.city ||
+          !formData.returnFlight.arrival?.airport ||
+          !formData.returnFlight.arrival?.code ||
+          !formData.returnFlight.arrival?.time
+        ) {
           errors.push("返程到达信息不完整");
         }
       }
@@ -73,16 +92,13 @@ export function EditFlightContainer({
       }
 
       // 转换表单数据为 IFlight 格式
-      const { returnFlight, price, discountPrice, ...baseFormData } = formData;
-      
+      const { returnFlight, price, ...baseFormData } = formData;
+
       // 处理价格字段 - 如果折扣价格为0或undefined，则不包含
       const priceData: any = {
         price: price,
       };
-      if (discountPrice && discountPrice > 0) {
-        priceData.discountPrice = discountPrice;
-      }
-      
+
       const flightData: Partial<IFlight> = {
         ...baseFormData,
         ...priceData,
@@ -103,16 +119,20 @@ export function EditFlightContainer({
           time: new Date(formData.arrival.time),
         },
         // 处理中转信息
-        layovers: formData.layovers?.map(layover => ({
+        layovers: formData.layovers?.map((layover) => ({
           ...layover,
           terminal: layover.terminal || "",
-          arrivalTime: layover.arrivalTime ? new Date(layover.arrivalTime) : new Date(),
-          departureTime: layover.departureTime ? new Date(layover.departureTime) : new Date(),
+          arrivalTime: layover.arrivalTime
+            ? new Date(layover.arrivalTime)
+            : new Date(),
+          departureTime: layover.departureTime
+            ? new Date(layover.departureTime)
+            : new Date(),
         })),
         // 提供默认值
         baggage: formData.baggage || {
           cabin: { weight: "7kg", quantity: 1 },
-          checked: { weight: "23kg", quantity: 1 }
+          checked: { weight: "23kg", quantity: 1 },
         },
         amenities: formData.amenities || [],
         status: formData.status || "active",

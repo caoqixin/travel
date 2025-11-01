@@ -35,7 +35,6 @@ const flightSchema = z.object({
   type: z.enum(["one-way", "round-trip"]),
   image: z.string().optional(),
   price: z.number().min(0, "价格必须大于0"),
-  discountPrice: z.number().min(0, "折扣价必须大于0").optional(),
 
   // 航班信息
   flightNumber: z.string().min(1, "航班号不能为空"),
@@ -149,7 +148,6 @@ export function CreateFlightForm({
       type: "one-way",
       image: "",
       price: 0,
-      discountPrice: 0,
       flightNumber: "",
       flightDuration: "",
       departure: {
@@ -388,24 +386,6 @@ export function CreateFlightForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>价格 (€)</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="0"
-                      {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="discountPrice"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>折扣价 (€)</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="0"

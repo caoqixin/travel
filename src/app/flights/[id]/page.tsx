@@ -1,38 +1,8 @@
 import FlightDetailDynamic from "@/features/flights/components/FlightDetailDynamic";
 import { Button } from "@/components/ui/button";
 import { Plane } from "lucide-react";
-import { IFlight } from "@/lib/models/Flight";
 import Link from "next/link";
-
-async function getFlight(id: string): Promise<IFlight | null> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const response = await fetch(`${baseUrl}/api/flights/${id}`, {
-      cache: "no-store", // 确保获取最新数据
-    });
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        return null;
-      }
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (data.success) {
-      return data.flight as IFlight;
-    } else {
-      console.error(
-        "Failed to fetch flight:",
-        data.error || data.message || "Unknown error"
-      );
-      return null;
-    }
-  } catch {
-    return null;
-  }
-}
+import { getFlightById, getFlights } from "@/server/flights/server";
 
 interface PageProps {
   params: Promise<{
@@ -40,11 +10,19 @@ interface PageProps {
   }>;
 }
 
+export async function generateStaticParams() {
+  const flights = await getFlights();
+
+  return flights.map((flight) => ({
+    id: flight._id.toString(),
+  }));
+}
+
 export default async function FlightDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const flight = await getFlight(id);
+  const { data, success } = await getFlightById(id);
 
-  if (!flight) {
+  if (!success) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -63,6 +41,14 @@ export default async function FlightDetailPage({ params }: PageProps) {
     );
   }
 
+  const serializedFlight = JSON.parse(
+    JSON.stringify(data, (_, value) =>
+      typeof value === "object" && value?._bsontype === "ObjectID"
+        ? value.toString()
+        : value
+    )
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -78,9 +64,7 @@ export default async function FlightDetailPage({ params }: PageProps) {
       </header>
 
       {/* Main Content */}
-      <main>
-        <FlightDetailDynamic flight={flight} />
-      </main>
+      <main>{data && <FlightDetailDynamic flight={serializedFlight} />}</main>
     </div>
   );
 }

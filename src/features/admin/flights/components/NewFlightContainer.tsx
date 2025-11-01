@@ -84,9 +84,6 @@ export function NewFlightContainer() {
         description: validateAndClean(data.description),
         image: validateAndClean(data.image, "/placeholder-flight.jpg"), // 提供默认图片
         price: Number(data.price),
-        discountPrice: data.discountPrice
-          ? Number(data.discountPrice)
-          : undefined,
         departure: {
           city: validateAndClean(data.departure.city),
           airport: validateAndClean(data.departure.airport),

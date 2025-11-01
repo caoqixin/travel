@@ -479,20 +479,9 @@ export function FlightsList({ initialFlights = [] }: FlightsListProps) {
                         {/* 价格 */}
                         <div className="flex flex-col items-end justify-center">
                           <div className="text-right">
-                            {flight.discountPrice ? (
-                              <>
-                                <div className="text-lg font-bold text-red-600">
-                                  €{flight.discountPrice.toLocaleString()}
-                                </div>
-                                <div className="text-sm text-gray-500 line-through">
-                                  €{flight.price.toLocaleString()}
-                                </div>
-                              </>
-                            ) : (
-                              <div className="text-lg font-bold text-blue-600">
-                                €{flight.price.toLocaleString()}
-                              </div>
-                            )}
+                            <div className="text-lg font-bold text-blue-600">
+                              €{flight.price.toLocaleString()}
+                            </div>
                           </div>
                         </div>
                       </div>

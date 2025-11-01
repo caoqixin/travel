@@ -49,20 +49,9 @@ export default function FlightCard({ flight }: FlightCardProps) {
 
         {/* 价格标签 */}
         <div className="absolute top-3 right-3 bg-linear-to-r from-white to-blue-50 backdrop-blur-md rounded-xl px-3 py-2 shadow-lg border border-white/20">
-          {flight.discountPrice ? (
-            <div className="text-right">
-              <div className="text-xs text-gray-500 line-through">
-                €{flight.price.toLocaleString()}
-              </div>
-              <div className="text-lg font-bold bg-linear-to-r from-red-600 to-pink-600 bg-clip-text text-transparent">
-                €{flight.discountPrice.toLocaleString()}
-              </div>
-            </div>
-          ) : (
-            <div className="text-lg font-bold bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              €{flight.price.toLocaleString()}
-            </div>
-          )}
+          <div className="text-lg font-bold bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+            €{flight.price.toLocaleString()}
+          </div>
         </div>
 
         {/* 航班类型标签 */}
@@ -78,15 +67,6 @@ export default function FlightCard({ flight }: FlightCardProps) {
             {flight.type === "round-trip" ? "往返" : "单程"}
           </Badge>
         </div>
-
-        {/* 折扣标签 */}
-        {flight.discountPrice && (
-          <div className="absolute bottom-3 left-3">
-            <Badge className="bg-linear-to-r from-red-500 to-pink-500 text-white border-0 text-xs px-2 py-1 animate-pulse">
-              特价
-            </Badge>
-          </div>
-        )}
       </div>
 
       <CardContent className="p-4 sm:p-5 flex flex-col grow">

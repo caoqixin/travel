@@ -29,23 +29,11 @@ const OptimizedFlightCard = memo<OptimizedFlightCardProps>(
   ({ flight, onCardClick, priority = false, lazy = true }) => {
     // 缓存计算结果
     const flightInfo = useMemo(() => {
-      const hasDiscount =
-        flight.discountPrice && flight.discountPrice < flight.price;
-      const discountPercentage = hasDiscount
-        ? Math.round(
-            ((flight.price - flight.discountPrice!) / flight.price) * 100
-          )
-        : 0;
-
-      const finalPrice = hasDiscount ? flight.discountPrice! : flight.price;
-
       return {
-        hasDiscount,
-        discountPercentage,
-        finalPrice,
+        price: flight.price,
         isRoundTrip: flight.type === "round-trip",
       };
-    }, [flight.price, flight.discountPrice, flight.type]);
+    }, [flight.price, flight.type]);
 
     // 设施图标映射
     const amenityIcons = useMemo(() => {
@@ -123,23 +111,9 @@ const OptimizedFlightCard = memo<OptimizedFlightCardProps>(
 
           {/* 价格标签 */}
           <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
-            {flightInfo.hasDiscount ? (
-              <div className="text-right">
-                <div className="text-xs text-gray-500 line-through">
-                  ¥{flight.price.toLocaleString()}
-                </div>
-                <div className="text-lg font-bold text-red-600">
-                  ¥{flightInfo.finalPrice.toLocaleString()}
-                </div>
-                <div className="text-xs text-red-500 font-medium">
-                  省{flightInfo.discountPercentage}%
-                </div>
-              </div>
-            ) : (
-              <div className="text-lg font-bold text-blue-600">
-                ¥{flightInfo.finalPrice.toLocaleString()}
-              </div>
-            )}
+            <div className="text-lg font-bold text-blue-600">
+              € {flightInfo.price.toLocaleString()}
+            </div>
           </div>
 
           {/* 航班类型标签 */}
@@ -151,15 +125,6 @@ const OptimizedFlightCard = memo<OptimizedFlightCardProps>(
               {flightInfo.isRoundTrip ? "往返" : "单程"}
             </Badge>
           </div>
-
-          {/* 特价标签 */}
-          {flightInfo.hasDiscount && (
-            <div className="absolute bottom-3 left-3">
-              <Badge className="bg-red-500 text-white text-xs animate-pulse">
-                特价
-              </Badge>
-            </div>
-          )}
         </div>
 
         <CardContent className="p-4 flex flex-col grow">

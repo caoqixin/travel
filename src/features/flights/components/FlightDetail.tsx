@@ -26,9 +26,10 @@ import Link from "next/link";
 import { IFlight } from "@/lib/models/Flight";
 import { useState } from "react";
 import Image from "next/image";
+import { WithId } from "mongodb";
 
 interface FlightDetailProps {
-  flight: IFlight;
+  flight: WithId<IFlight>;
 }
 
 export default function FlightDetail({ flight }: FlightDetailProps) {
@@ -541,24 +542,9 @@ export default function FlightDetail({ flight }: FlightDetailProps) {
               </CardHeader>
               <CardContent className="p-4 sm:p-6 space-y-6">
                 <div className="text-center p-4 bg-linear-to-r from-white to-blue-50 rounded-xl border border-blue-100 shadow-sm">
-                  {flight.discountPrice ? (
-                    <>
-                      <div className="text-3xl sm:text-4xl font-bold bg-linear-to-r from-red-500 to-pink-500 bg-clip-text text-transparent">
-                        €{flight.discountPrice.toLocaleString()}
-                      </div>
-                      <div className="text-lg sm:text-xl text-gray-500 line-through mt-1">
-                        €{flight.price.toLocaleString()}
-                      </div>
-                      <div className="text-sm font-medium text-green-600 mt-2 px-3 py-1 bg-green-100 rounded-full inline-block">
-                        节省 €
-                        {(flight.price - flight.discountPrice).toLocaleString()}
-                      </div>
-                    </>
-                  ) : (
-                    <div className="text-3xl sm:text-4xl font-bold bg-linear-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">
-                      €{flight.price.toLocaleString()}
-                    </div>
-                  )}
+                  <div className="text-3xl sm:text-4xl font-bold bg-linear-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">
+                    €{flight.price.toLocaleString()}
+                  </div>
                 </div>
 
                 <Button

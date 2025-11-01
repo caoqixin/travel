@@ -13,14 +13,7 @@ import {
   Eye,
   Loader2,
   MapPin,
-  Clock,
-  Calendar,
-  Users,
   Luggage,
-  Wifi,
-  Coffee,
-  ArrowRight,
-  AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -28,9 +21,10 @@ import { zhCN } from "date-fns/locale";
 import Image from "next/image";
 import { toast } from "sonner";
 import { IFlight } from "@/lib/models/Flight";
+import { WithId } from "mongodb";
 
 interface FlightDetailContainerProps {
-  flight: IFlight;
+  flight: WithId<IFlight>;
 }
 
 export function FlightDetailContainer({ flight }: FlightDetailContainerProps) {
@@ -154,12 +148,6 @@ export function FlightDetailContainer({ flight }: FlightDetailContainerProps) {
                   <span className="text-2xl font-bold text-blue-600">
                     €{flight.price.toLocaleString()}
                   </span>
-                  {flight.discountPrice &&
-                    flight.discountPrice < flight.price && (
-                      <span className="ml-2 text-lg text-gray-500 line-through">
-                        €{flight.discountPrice.toLocaleString()}
-                      </span>
-                    )}
                 </div>
                 <Badge variant="outline">
                   {flight.type === "one-way" ? "单程" : "往返"}

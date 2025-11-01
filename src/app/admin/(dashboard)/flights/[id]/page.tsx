@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { FlightDetailContainer } from "@/features/admin/flights/components/FlightDetailContainer";
 import { IFlight } from "@/lib/models/Flight";
+import { getFlightById, getFlights } from "@/server/flights/server";
 
 export const metadata: Metadata = {
   title: "航班详情 - 管理后台",
@@ -12,6 +13,14 @@ interface FlightDetailPageProps {
   params: Promise<{
     id: string;
   }>;
+}
+
+export async function generateStaticParams() {
+  const flights = await getFlights();
+
+  return flights.map((flight) => ({
+    id: flight._id.toString(),
+  }));
 }
 
 async function getFlight(id: string): Promise<IFlight | null> {
@@ -46,11 +55,19 @@ export default async function AdminFlightDetailPage({
   params,
 }: FlightDetailPageProps) {
   const { id } = await params;
-  const flight = await getFlight(id);
+  const { data, success } = await getFlightById(id);
 
-  if (!flight) {
+  if (!success) {
     notFound();
   }
 
-  return <FlightDetailContainer flight={flight} />;
+  const serializedFlight = JSON.parse(
+    JSON.stringify(data, (_, value) =>
+      typeof value === "object" && value?._bsontype === "ObjectID"
+        ? value.toString()
+        : value
+    )
+  );
+
+  return data && <FlightDetailContainer flight={serializedFlight} />;
 }

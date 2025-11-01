@@ -6,7 +6,6 @@ export interface IFlight {
   description?: string;
   image: string;
   price: number;
-  discountPrice?: number;
   departure: {
     city: string;
     airport: string;
@@ -117,18 +116,6 @@ export function validateFlight(flight: Partial<IFlight>): string[] {
     errors.push("Price must be greater than 0");
   }
 
-  if (flight.discountPrice !== undefined && flight.discountPrice <= 0) {
-    errors.push("Discount price must be greater than 0");
-  }
-
-  if (
-    flight.price !== undefined &&
-    flight.discountPrice !== undefined &&
-    flight.discountPrice >= flight.price
-  ) {
-    errors.push("Discount price must be less than regular price");
-  }
-
   if (flight.type && !["one-way", "round-trip"].includes(flight.type)) {
     errors.push("Type must be either 'one-way' or 'round-trip'");
   }
@@ -146,10 +133,16 @@ export function validateFlight(flight: Partial<IFlight>): string[] {
 
   // 验证往返航班信息
   if (flight.type === "round-trip" && flight.returnFlight) {
-    if (!flight.returnFlight.flightNumber || flight.returnFlight.flightNumber.trim().length === 0) {
+    if (
+      !flight.returnFlight.flightNumber ||
+      flight.returnFlight.flightNumber.trim().length === 0
+    ) {
       errors.push("Return flight number is required for round-trip flights");
     }
-    if (!flight.returnFlight.flightDuration || flight.returnFlight.flightDuration.trim().length === 0) {
+    if (
+      !flight.returnFlight.flightDuration ||
+      flight.returnFlight.flightDuration.trim().length === 0
+    ) {
       errors.push("Return flight duration is required for round-trip flights");
     }
   }
@@ -160,9 +153,9 @@ export function validateFlight(flight: Partial<IFlight>): string[] {
 // 创建航班的默认值
 export function createFlightDefaults(flightData: Partial<IFlight>): IFlight {
   const now = new Date();
-  
+
   // 自动计算经停次数
-  const calculateStops = (layovers?: IFlight['layovers']): number => {
+  const calculateStops = (layovers?: IFlight["layovers"]): number => {
     return layovers ? layovers.length : 0;
   };
 
@@ -172,7 +165,6 @@ export function createFlightDefaults(flightData: Partial<IFlight>): IFlight {
     description: flightData.description,
     image: flightData.image!,
     price: flightData.price!,
-    discountPrice: flightData.discountPrice,
     departure: flightData.departure!,
     arrival: flightData.arrival!,
     flightNumber: flightData.flightNumber!,
@@ -184,7 +176,7 @@ export function createFlightDefaults(flightData: Partial<IFlight>): IFlight {
     stops: calculateStops(flightData.layovers),
     baggage: flightData.baggage || {
       cabin: { weight: "", quantity: 1 },
-      checked: { weight: "", quantity: 1 }
+      checked: { weight: "", quantity: 1 },
     },
     amenities: flightData.amenities || [],
     status: flightData.status || "active",

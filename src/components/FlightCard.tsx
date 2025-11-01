@@ -18,10 +18,6 @@ export default function FlightCard({ flight }: FlightCardProps) {
   const departureDate = new Date(flight.departure.time);
   const arrivalDate = new Date(flight.arrival.time);
 
-  const discount = flight.discountPrice
-    ? Math.round((1 - flight.discountPrice / flight.price) * 100)
-    : 0;
-
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 bg-white">
       <div className="relative h-32 sm:h-48 md:h-56">
@@ -39,14 +35,6 @@ export default function FlightCard({ flight }: FlightCardProps) {
           >
             {flight.type === "round-trip" ? "往返" : "单程"}
           </Badge>
-          {discount > 0 && (
-            <Badge
-              variant="destructive"
-              className="bg-red-500 text-xs sm:text-sm"
-            >
-              {discount}% OFF
-            </Badge>
-          )}
         </div>
         {flight.tags.length > 0 && (
           <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
@@ -122,13 +110,8 @@ export default function FlightCard({ flight }: FlightCardProps) {
         <div className="flex items-center justify-between pt-2 border-t">
           <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
             <span className="text-lg sm:text-2xl font-bold text-blue-600">
-              €{(flight.discountPrice || flight.price).toLocaleString()}
+              €{flight.price.toLocaleString()}
             </span>
-            {flight.discountPrice && (
-              <span className="text-xs sm:text-sm text-gray-500 line-through">
-                €{flight.price.toLocaleString()}
-              </span>
-            )}
           </div>
 
           <Link href={`/flights/${flight._id}`}>

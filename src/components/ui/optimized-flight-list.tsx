@@ -1,25 +1,37 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { VirtualGrid, InfiniteVirtualList } from './virtual-list';
-import OptimizedFlightCard from './optimized-flight-card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Search, 
-  Filter, 
-  SortAsc, 
-  SortDesc, 
-  Loader2, 
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
+import { VirtualGrid, InfiniteVirtualList } from "./virtual-list";
+import OptimizedFlightCard from "./optimized-flight-card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Search,
+  Filter,
+  SortAsc,
+  SortDesc,
+  Loader2,
   RefreshCw,
   Grid,
   List,
-  Settings
-} from 'lucide-react';
-import { IFlight } from '@/lib/models/Flight';
-import { useDebounce } from '@/hooks/useDebounce';
+  Settings,
+} from "lucide-react";
+import { IFlight } from "@/lib/models/Flight";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface OptimizedFlightListProps {
   initialFlights?: IFlight[];
@@ -31,8 +43,14 @@ interface OptimizedFlightListProps {
   className?: string;
 }
 
-type SortOption = 'price-asc' | 'price-desc' | 'time-asc' | 'time-desc' | 'duration-asc' | 'duration-desc';
-type ViewMode = 'grid' | 'list';
+type SortOption =
+  | "price-asc"
+  | "price-desc"
+  | "time-asc"
+  | "time-desc"
+  | "duration-asc"
+  | "duration-desc";
+type ViewMode = "grid" | "list";
 
 const OptimizedFlightList: React.FC<OptimizedFlightListProps> = ({
   initialFlights = [],
@@ -41,23 +59,24 @@ const OptimizedFlightList: React.FC<OptimizedFlightListProps> = ({
   enableInfiniteScroll = false,
   itemsPerPage = 20,
   containerHeight = 600,
-  className = ''
+  className = "",
 }) => {
   // 状态管理
   const [flights, setFlights] = useState<IFlight[]>(initialFlights);
-  const [filteredFlights, setFilteredFlights] = useState<IFlight[]>(initialFlights);
+  const [filteredFlights, setFilteredFlights] =
+    useState<IFlight[]>(initialFlights);
   const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<SortOption>('price-asc');
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState<SortOption>("price-asc");
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 50000]);
   const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
-  
+
   // 防抖搜索
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  
+
   // 容器引用
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(1200);
@@ -71,20 +90,14 @@ const OptimizedFlightList: React.FC<OptimizedFlightListProps> = ({
     };
 
     updateWidth();
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
   }, []);
-
-  // 获取航空公司列表
-  const airlines = useMemo(() => {
-    const airlineSet = new Set(flights.map(flight => flight.airline.name));
-    return Array.from(airlineSet);
-  }, [flights]);
 
   // 价格范围
   const priceExtent = useMemo((): [number, number] => {
     if (flights.length === 0) return [0, 50000];
-    const prices = flights.map(f => f.discountPrice || f.price);
+    const prices = flights.map((f) => f.price);
     return [Math.min(...prices), Math.max(...prices)];
   }, [flights]);
 
@@ -95,23 +108,24 @@ const OptimizedFlightList: React.FC<OptimizedFlightListProps> = ({
     // 搜索过滤
     if (debouncedSearchTerm) {
       const term = debouncedSearchTerm.toLowerCase();
-      result = result.filter(flight =>
-        flight.title.toLowerCase().includes(term) ||
-        flight.departure.city.toLowerCase().includes(term) ||
-        flight.arrival.city.toLowerCase().includes(term) ||
-        flight.airline.name.toLowerCase().includes(term)
+      result = result.filter(
+        (flight) =>
+          flight.title.toLowerCase().includes(term) ||
+          flight.departure.city.toLowerCase().includes(term) ||
+          flight.arrival.city.toLowerCase().includes(term) ||
+          flight.airline.name.toLowerCase().includes(term)
       );
     }
 
     // 价格过滤
-    result = result.filter(flight => {
-      const price = flight.discountPrice || flight.price;
+    result = result.filter((flight) => {
+      const price = flight.price;
       return price >= priceRange[0] && price <= priceRange[1];
     });
 
     // 航空公司过滤
     if (selectedAirlines.length > 0) {
-      result = result.filter(flight => 
+      result = result.filter((flight) =>
         selectedAirlines.includes(flight.airline.name)
       );
     }
@@ -119,18 +133,24 @@ const OptimizedFlightList: React.FC<OptimizedFlightListProps> = ({
     // 排序
     result.sort((a, b) => {
       switch (sortBy) {
-        case 'price-asc':
-          return (a.discountPrice || a.price) - (b.discountPrice || b.price);
-        case 'price-desc':
-          return (b.discountPrice || b.price) - (a.discountPrice || a.price);
-        case 'time-asc':
-          return new Date(a.departure.time).getTime() - new Date(b.departure.time).getTime();
-        case 'time-desc':
-          return new Date(b.departure.time).getTime() - new Date(a.departure.time).getTime();
-        case 'duration-asc':
-          return (a.flightDuration || '').localeCompare(b.flightDuration || '');
-        case 'duration-desc':
-          return (b.flightDuration || '').localeCompare(a.flightDuration || '');
+        case "price-asc":
+          return a.price - b.price;
+        case "price-desc":
+          return b.price - a.price;
+        case "time-asc":
+          return (
+            new Date(a.departure.time).getTime() -
+            new Date(b.departure.time).getTime()
+          );
+        case "time-desc":
+          return (
+            new Date(b.departure.time).getTime() -
+            new Date(a.departure.time).getTime()
+          );
+        case "duration-asc":
+          return (a.flightDuration || "").localeCompare(b.flightDuration || "");
+        case "duration-desc":
+          return (b.flightDuration || "").localeCompare(a.flightDuration || "");
         default:
           return 0;
       }
@@ -144,7 +164,10 @@ const OptimizedFlightList: React.FC<OptimizedFlightListProps> = ({
     if (enableInfiniteScroll) {
       return processedFlights.slice(0, currentPage * itemsPerPage);
     }
-    return processedFlights.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    return processedFlights.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    );
   }, [processedFlights, currentPage, itemsPerPage, enableInfiniteScroll]);
 
   // 更新过滤结果
@@ -156,7 +179,7 @@ const OptimizedFlightList: React.FC<OptimizedFlightListProps> = ({
   // 加载更多数据
   const loadMore = useCallback(() => {
     if (hasMore && !loading) {
-      setCurrentPage(prev => prev + 1);
+      setCurrentPage((prev) => prev + 1);
     }
   }, [hasMore, loading]);
 
@@ -170,7 +193,7 @@ const OptimizedFlightList: React.FC<OptimizedFlightListProps> = ({
       // setFlights(newFlights);
       setCurrentPage(1);
     } catch (error) {
-      console.error('Failed to refresh flights:', error);
+      console.error("Failed to refresh flights:", error);
     } finally {
       setLoading(false);
     }
@@ -178,34 +201,37 @@ const OptimizedFlightList: React.FC<OptimizedFlightListProps> = ({
 
   // 重置过滤器
   const resetFilters = useCallback(() => {
-    setSearchTerm('');
-    setSortBy('price-asc');
+    setSearchTerm("");
+    setSortBy("price-asc");
     setPriceRange(priceExtent);
     setSelectedAirlines([]);
     setCurrentPage(1);
   }, [priceExtent]);
 
   // 渲染航班卡片
-  const renderFlightCard = useCallback((flight: IFlight, index: number) => (
-    <OptimizedFlightCard
-      key={flight._id.toString()}
-      flight={flight}
-      onCardClick={onFlightClick}
-      priority={index < 4} // 前4个卡片优先加载
-      lazy={index >= 4}
-    />
-  ), [onFlightClick]);
+  const renderFlightCard = useCallback(
+    (flight: IFlight, index: number) => (
+      <OptimizedFlightCard
+        key={flight._id.toString()}
+        flight={flight}
+        onCardClick={onFlightClick}
+        priority={index < 4} // 前4个卡片优先加载
+        lazy={index >= 4}
+      />
+    ),
+    [onFlightClick]
+  );
 
   // 计算网格参数
   const gridParams = useMemo(() => {
-    const cardWidth = viewMode === 'grid' ? 320 : containerWidth;
-    const cardHeight = viewMode === 'grid' ? 480 : 200;
+    const cardWidth = viewMode === "grid" ? 320 : containerWidth;
+    const cardHeight = viewMode === "grid" ? 480 : 200;
     const gap = 16;
-    
+
     return {
       itemWidth: cardWidth,
       itemHeight: cardHeight,
-      gap
+      gap,
     };
   }, [viewMode, containerWidth]);
 
@@ -231,14 +257,19 @@ const OptimizedFlightList: React.FC<OptimizedFlightListProps> = ({
                 onClick={refreshData}
                 disabled={loading}
               >
-                <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                <RefreshCw
+                  className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
+                />
                 刷新
               </Button>
             </div>
 
             {/* 过滤和排序控件 */}
             <div className="flex flex-wrap gap-4 items-center">
-              <Select value={sortBy} onValueChange={(value: SortOption) => setSortBy(value)}>
+              <Select
+                value={sortBy}
+                onValueChange={(value: SortOption) => setSortBy(value)}
+              >
                 <SelectTrigger className="w-48">
                   <SelectValue placeholder="排序方式" />
                 </SelectTrigger>
@@ -254,16 +285,16 @@ const OptimizedFlightList: React.FC<OptimizedFlightListProps> = ({
 
               <div className="flex items-center gap-2">
                 <Button
-                  variant={viewMode === 'grid' ? 'default' : 'outline'}
+                  variant={viewMode === "grid" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setViewMode('grid')}
+                  onClick={() => setViewMode("grid")}
                 >
                   <Grid className="h-4 w-4" />
                 </Button>
                 <Button
-                  variant={viewMode === 'list' ? 'default' : 'outline'}
+                  variant={viewMode === "list" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setViewMode('list')}
+                  onClick={() => setViewMode("list")}
                 >
                   <List className="h-4 w-4" />
                 </Button>
@@ -329,12 +360,16 @@ const OptimizedFlightList: React.FC<OptimizedFlightListProps> = ({
             />
           )
         ) : (
-          <div className={`grid gap-4 ${
-            viewMode === 'grid' 
-              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
-              : 'grid-cols-1'
-          }`}>
-            {filteredFlights.map((flight, index) => renderFlightCard(flight, index))}
+          <div
+            className={`grid gap-4 ${
+              viewMode === "grid"
+                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                : "grid-cols-1"
+            }`}
+          >
+            {filteredFlights.map((flight, index) =>
+              renderFlightCard(flight, index)
+            )}
           </div>
         )}
       </div>
@@ -345,26 +380,32 @@ const OptimizedFlightList: React.FC<OptimizedFlightListProps> = ({
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="text-sm text-gray-600">
-                显示第 {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, processedFlights.length)} 条，
-                共 {processedFlights.length} 条记录
+                显示第 {(currentPage - 1) * itemsPerPage + 1} -{" "}
+                {Math.min(currentPage * itemsPerPage, processedFlights.length)}{" "}
+                条， 共 {processedFlights.length} 条记录
               </div>
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(1, prev - 1))
+                  }
                   disabled={currentPage === 1}
                 >
                   上一页
                 </Button>
                 <span className="text-sm">
-                  {currentPage} / {Math.ceil(processedFlights.length / itemsPerPage)}
+                  {currentPage} /{" "}
+                  {Math.ceil(processedFlights.length / itemsPerPage)}
                 </span>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setCurrentPage(prev => prev + 1)}
-                  disabled={currentPage * itemsPerPage >= processedFlights.length}
+                  onClick={() => setCurrentPage((prev) => prev + 1)}
+                  disabled={
+                    currentPage * itemsPerPage >= processedFlights.length
+                  }
                 >
                   下一页
                 </Button>
